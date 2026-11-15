@@ -1316,7 +1316,7 @@
             Pré-visualização da Rede Verificada
           </span>
           <button type="button" id="urgent-toggle-btn" onclick="toggleUrgentPreview()" class="urgent-toggle">
-            ⚡ Urgência em Prova: Simular
+            ⚡ Urgência 24h: Simular
           </button>
         </div>
 
@@ -1324,7 +1324,7 @@
 
         <div class="preview-body">
           <div id="urgent-banner" class="urgent-banner hidden">
-            <span>⚠ Modo Piquete CSN/CSI ativo — resposta imediata</span>
+            <span>⚠ Piquete de Urgência 24h ativo — apoio imediato a qualquer momento</span>
             <strong>&lt; 15 min</strong>
           </div>
           <div id="preview-cards" style="display: flex; flex-direction: column; gap: 10px;"></div>
@@ -1356,7 +1356,7 @@
           <li><span class="icon-good">✓</span><span><strong>Pesquisa direta</strong> por especialidade, concurso e região de Portugal Continental.</span></li>
           <li><span class="icon-good">✓</span><span><strong>Comparação transparente</strong> de experiência, disponibilidade e tarifas indicativas.</span></li>
           <li><span class="icon-good">✓</span><span><strong>Documentação obrigatória validada</strong> antes de qualquer perfil ser publicado.</span></li>
-          <li><span class="icon-good">✓</span><span><strong>Modo de Urgência em Prova</strong> para resolver imprevistos em minutos.</span></li>
+          <li><span class="icon-good">✓</span><span><strong>Apoio de Urgência 24h</strong> para pedir assistência veterinária a qualquer momento.</span></li>
         </ul>
       </div>
     </section>
@@ -1378,9 +1378,9 @@
           <p>Apoio especializado em concursos CSN/CSI, preparação em pista, cuidado diário e gestão de equipamento.</p>
         </div>
         <div class="spec-card">
-          <div class="spec-top"><span class="spec-num">02</span><span class="spec-tag">Rotina &amp; Urgência</span></div>
+          <div class="spec-top"><span class="spec-num">02</span><span class="spec-tag">Rotina &amp; Desporto</span></div>
           <h3>Ferradores</h3>
-          <p>Ferração desportiva, corretiva e resposta rápida para ferraduras perdidas durante competições.</p>
+          <p>Ferração desportiva, corretiva e manutenção regular para cavalos de ensino, obstáculos e coudelarias.</p>
         </div>
         <div class="spec-card">
           <div class="spec-top"><span class="spec-num">03</span><span class="spec-tag">Cédula OMV</span></div>
@@ -1622,7 +1622,7 @@
             <ul class="check-list" style="color: #f7f5f0;">
               <li><span style="color: #e3b778;">★</span><span>Posicionamento prioritário nos resultados por região</span></li>
               <li><span style="color: #e3b778;">★</span><span>Selo VIP Dourado de destaque imediato</span></li>
-              <li><span style="color: #e3b778;">★</span><span>Prioridade em alertas de Urgência em Prova</span></li>
+              <li><span style="color: #e3b778;">★</span><span>Prioridade em alertas de Urgência 24h</span></li>
               <li><span style="color: #e3b778;">★</span><span>Condição experimental gratuita para primeiros inscritos</span></li>
             </ul>
           </div>
@@ -1770,8 +1770,8 @@
           <p>O registo é online em 2 minutos, mas nenhum perfil fica visível ao público antes da validação documental: confirmamos Cartão de Cidadão/NIF, cédula OMV (Veterinários) e licença DGAV (Transportadores).</p>
         </details>
         <details>
-          <summary>Como funciona em situações urgentes durante um concurso?</summary>
-          <p>A plataforma dispõe de um filtro de Urgência em Prova que destaca profissionais disponíveis na região do evento com tempo de resposta rápido.</p>
+          <summary>Como funciona em situações de urgência veterinária a qualquer momento?</summary>
+          <p>A plataforma dispõe do modo Urgência 24h que destaca veterinários com piquete ativo e unidade móvel na região, permitindo pedir apoio imediato a qualquer momento (cólicas, feridas ou imprevistos em concurso e estábulo).</p>
         </details>
         <details>
           <summary>Qual é a vantagem de entrar já na lista de espera?</summary>
@@ -1795,7 +1795,7 @@
         { initials: 'TP', name: 'Tiago Pereira', role: 'Tratador de Estábulo & Preparação', region: 'Algarve • Vilamoura', badge: 'Identidade Verificada', rate: '€80 / dia', resp: '< 30 min', vip: false, urgentReady: false }
       ],
       'Ferradores': [
-        { initials: 'DS', name: 'Diogo Sousa', role: 'Ferrador Ortopédico & Urgências', region: 'Lisboa & Tejo • Cascais', badge: 'Certificação & Seguro Validados', rate: '€90 / serviço', resp: '< 12 min', vip: true, urgentReady: true },
+        { initials: 'DS', name: 'Diogo Sousa', role: 'Ferrador Ortopédico & Desportivo', region: 'Lisboa & Tejo • Cascais', badge: 'Certificação & Seguro Validados', rate: '€90 / serviço', resp: '< 20 min', vip: true, urgentReady: false },
         { initials: 'RA', name: 'Rui Almeida', role: 'Ferração Desportiva & Rotina', region: 'Porto & Norte', badge: 'Identidade Verificada', rate: '€75 / serviço', resp: '< 45 min', vip: false, urgentReady: false }
       ],
       'Veterinários': [
@@ -1951,7 +1951,7 @@
     function renderPreview() {
       const btn = document.getElementById('urgent-toggle-btn');
       btn.className = state.urgentPreview ? 'urgent-toggle active' : 'urgent-toggle';
-      btn.textContent = state.urgentPreview ? '⚡ Urgência em Prova: Ativo' : '⚡ Urgência em Prova: Simular';
+      btn.textContent = state.urgentPreview ? '⚡ Urgência 24h: Ativo' : '⚡ Urgência 24h: Simular';
       document.getElementById('urgent-banner').className = state.urgentPreview ? 'urgent-banner' : 'urgent-banner hidden';
 
       document.getElementById('preview-tabs').innerHTML = Object.keys(PREVIEW_DATA).map(cat => `
@@ -2133,7 +2133,7 @@
         ? [
             { step: '01', title: 'Filtre por Região ou Prova', desc: 'Escolha especialidade, datas, número de cavalos e localização exata em segundos.' },
             { step: '02', title: 'Compare com Segurança', desc: 'Avalie experiência, documentos validados, avaliações e tarifas antes de avançar.' },
-            { step: '03', title: 'Reserve ou Ative Urgência', desc: 'Fale diretamente com o profissional ou acione o modo de urgência durante o concurso.' }
+            { step: '03', title: 'Reserve ou Ative Urgência 24h', desc: 'Fale diretamente com o profissional ou peça assistência veterinária de urgência a qualquer momento.' }
           ]
         : [
             { step: '01', title: 'Auto-Registo Online Direto', desc: 'Crie o seu perfil através do link de adesão em 2 minutos, sem entrevistas presenciais.' },

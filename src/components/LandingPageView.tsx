@@ -89,12 +89,12 @@ const PREVIEW_DATA: Record<
     {
       initials: 'DS',
       name: 'Diogo Sousa',
-      title: 'Ferrador Ortopédico & Urgências',
+      title: 'Ferrador Ortopédico & Desportivo',
       region: 'Lisboa & Tejo • Cascais',
       badge: 'Certificação & Seguro Validados',
       rate: '€90 / serviço',
-      response: '< 12 min',
-      urgentReady: true,
+      response: '< 20 min',
+      urgentReady: false,
       isVip: true,
     },
     {
@@ -272,9 +272,9 @@ const SPECIALTIES = [
   },
   {
     num: '02',
-    tag: 'Rotina & Urgência',
+    tag: 'Rotina & Desporto',
     title: 'Ferradores',
-    desc: 'Ferração desportiva, corretiva e resposta rápida para ferraduras perdidas durante competições.',
+    desc: 'Ferração desportiva, corretiva e manutenção regular para cavalos de ensino, obstáculos e coudelarias.',
   },
   {
     num: '03',
@@ -346,8 +346,8 @@ const FAQS = [
     a: 'O registo é online em 2 minutos, mas nenhum perfil fica visível ao público antes da validação documental: confirmamos Cartão de Cidadão/NIF, cédula OMV (Veterinários) e licença DGAV (Transportadores).',
   },
   {
-    q: 'Como funciona em situações urgentes durante um concurso?',
-    a: 'A plataforma dispõe de um filtro de Urgência em Prova que destaca profissionais disponíveis na região do evento com tempo de resposta rápido.',
+    q: 'Como funciona em situações de urgência veterinária a qualquer momento?',
+    a: 'A plataforma dispõe do modo Urgência 24h que destaca veterinários com piquete ativo e unidade móvel na região, permitindo pedir apoio imediato a qualquer momento (cólicas, feridas ou imprevistos em concurso e estábulo).',
   },
   {
     q: 'Qual é a vantagem de entrar já na lista de espera?',
@@ -592,7 +592,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                   }`}
                 >
                   <Zap className="w-3 h-3" />
-                  Urgência em Prova: {urgentPreview ? 'Ativo' : 'Simular'}
+                  Urgência 24h: {urgentPreview ? 'Ativo' : 'Simular'}
                 </button>
               </div>
 
@@ -623,7 +623,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                   <div className="rounded-xl bg-[#fbf3ee] border border-[#e7cbb8] px-3.5 py-2.5 flex items-center justify-between text-xs text-[#7c4220] font-medium">
                     <span className="inline-flex items-center gap-1.5">
                       <AlertTriangle className="w-3.5 h-3.5" />
-                      Modo Piquete CSN/CSI ativo — a mostrar resposta imediata
+                      Piquete de Urgência 24h ativo — apoio imediato a qualquer momento
                     </span>
                     <span className="font-bold">&lt; 15 min</span>
                   </div>
@@ -742,7 +742,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                 'Pesquisa direta por especialidade, concurso e região de Portugal Continental.',
                 'Comparação transparente de experiência, disponibilidade e tarifas indicativas.',
                 'Documentação obrigatória validada antes de qualquer perfil ser publicado.',
-                'Modo de Urgência em Prova para resolver imprevistos em minutos.',
+                'Apoio de Urgência 24h para pedir assistência veterinária a qualquer momento.',
               ].map((txt) => (
                 <li key={txt} className="flex items-start gap-3 text-sm text-[#161d19] font-medium">
                   <Check className="w-4 h-4 text-[#142e22] shrink-0 mt-0.5" />
@@ -1383,8 +1383,8 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                 },
                 {
                   step: '03',
-                  title: 'Reserve ou Ative Urgência',
-                  desc: 'Fale diretamente com o profissional ou acione o modo de urgência durante o concurso.',
+                  title: 'Reserve ou Ative Urgência 24h',
+                  desc: 'Fale diretamente com o profissional ou peça assistência veterinária de urgência a qualquer momento.',
                   icon: <Zap className="w-4 h-4 text-[#94522a]" />,
                 },
               ]
@@ -1501,7 +1501,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                 {[
                   'Posicionamento prioritário nos resultados por região',
                   'Selo VIP Dourado de destaque imediato',
-                  'Prioridade em alertas de Urgência em Prova',
+                  'Prioridade em alertas de Urgência 24h',
                   'Condição experimental gratuita para primeiros inscritos',
                 ].map((feat) => (
                   <li key={feat} className="flex items-start gap-2.5">

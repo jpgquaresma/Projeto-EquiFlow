@@ -129,7 +129,7 @@ export function App() {
 
     const list = professionals
       .filter((pro) => {
-        if (onlyEmergency && !(pro.emergencyReady || pro.category === 'Veterinário / Emergência')) return false;
+        if (onlyEmergency && !(pro.category === 'Veterinário / Emergência' || pro.emergencyReady)) return false;
         if (selectedCategory !== 'Todas' && pro.category !== selectedCategory) return false;
         if (selectedRegion !== 'Todas' && pro.region !== selectedRegion) return false;
         if (onlyAvailableNow && !pro.availableNow) return false;
@@ -221,11 +221,11 @@ export function App() {
 
   const handleEmergencyClick = () => {
     setActiveTab('discover');
-    setSelectedCategory('Todas');
+    setSelectedCategory('Veterinário / Emergência');
     setSelectedRegion('Todas');
     setSearchQuery('');
     setOnlyEmergency(true);
-    showToast('🚨 Apoio de Urgência ativado: veterinários 24h e piquete de ferração.');
+    showToast('🚨 Apoio de Urgência 24h ativado: veterinários disponíveis a qualquer momento.');
   };
 
   const handleToggleProAvailability = (proId: string) => {
@@ -424,6 +424,40 @@ export function App() {
                 </div>
               </div>
             </section>
+
+            {/* Emergency Active Callout Banner */}
+            {onlyEmergency && (
+              <div className="bg-[#f9efe8] border-2 border-[#94522a] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 shadow-sm">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-11 h-11 rounded-xl bg-[#94522a] text-white flex items-center justify-center shrink-0 shadow-xs text-xl">
+                    🚨
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="font-display font-bold text-base text-[#94522a]">
+                        Apoio de Urgência Veterinária 24h Ativo
+                      </h2>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#94522a] text-white uppercase tracking-wider">
+                        A qualquer momento
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#5c645e] mt-0.5">
+                      A filtrar médicos veterinários com piquete ativo e unidade móvel (cólicas, suturas, imprevistos a qualquer hora).
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOnlyEmergency(false);
+                    setSelectedCategory('Todas');
+                  }}
+                  className="px-4 py-2 rounded-xl bg-white border border-[#94522a]/40 text-[#94522a] hover:bg-[#94522a] hover:text-white text-xs font-bold transition-colors cursor-pointer shrink-0"
+                >
+                  ✕ Desativar Urgência / Ver Todos
+                </button>
+              </div>
+            )}
 
             {/* Results: List or Map */}
             {viewMode === 'list' ? (

@@ -148,10 +148,10 @@
           id="btn-emergency"
           onclick="triggerEmergencyMode()"
           class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#f9efe8] border border-[#94522a]/35 text-[#94522a] hover:bg-[#94522a] hover:text-white transition-colors text-xs font-bold cursor-pointer shrink-0"
-          title="Encontrar veterinário ou ferrador de urgência imediata"
+          title="Acesso imediato a apoio veterinário de urgência 24h a qualquer momento"
         >
           <span class="w-2 h-2 rounded-full bg-[#94522a] pulse-live"></span>
-          <span>Urgência em Prova / Estábulo</span>
+          <span>Urgência Vet 24h</span>
         </button>
       </div>
 
@@ -234,10 +234,10 @@
                     class="p-3 rounded-xl border border-[#e2dcd0] bg-[#f8f6f1] hover:border-[#94522a] text-left transition-all cursor-pointer"
                   >
                     <div class="flex items-center justify-between">
-                      <span class="text-xs font-bold text-[#94522a]">🚨 Urgência / Piquete</span>
+                      <span class="text-xs font-bold text-[#94522a]">🚨 Urgência Veterinária</span>
                       <span class="text-[10px] font-bold text-[#94522a] bg-[#f9efe8] px-1.5 py-0.5 rounded">24h</span>
                     </div>
-                    <p class="text-[11px] text-[#58615b] mt-1">Veterinário equino móvel ou ferradura perdida antes de prova.</p>
+                    <p class="text-[11px] text-[#58615b] mt-1">Médico veterinário equino móvel para cólicas, suturas e imprevistos a qualquer hora.</p>
                   </button>
                 </div>
               </div>
@@ -352,11 +352,11 @@
           </div>
           <div>
             <div class="flex items-center gap-2 flex-wrap">
-              <h3 class="font-serif-editorial font-bold text-base text-[#94522a]">Piquete de Urgência Equestre 24h Ativo</h3>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#94522a] text-white uppercase tracking-wider">Resposta Prioritária</span>
+              <h3 class="font-serif-editorial font-bold text-base text-[#94522a]">Apoio de Urgência Veterinária 24h Ativo</h3>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#94522a] text-white uppercase tracking-wider">A qualquer momento</span>
             </div>
             <p class="text-xs text-[#58615b] mt-0.5">
-              A filtrar médicos veterinários com unidade móvel (cólicas, suturas) e ferradores para reposição urgente antes de pista.
+              A filtrar médicos veterinários com piquete ativo e unidade móvel (cólicas, suturas, imprevistos a qualquer hora em estábulo ou prova).
             </p>
           </div>
         </div>
@@ -910,8 +910,8 @@
           id: 'pro-2',
           name: 'Diogo Vasconcelos',
           category: 'Ferrador',
-          scenarios: ['concurso', 'estabulo', 'urgencia'],
-          headline: 'Ferrador Certificado • Piquete de Concurso & Reposição Urgente',
+          scenarios: ['concurso', 'estabulo'],
+          headline: 'Ferrador Certificado • Ferração Desportiva & Ortopédica',
           region: 'Ribatejo / Golegã',
           city: 'Golegã / Santarém',
           avatar: IMAGES.groom2,
@@ -1211,13 +1211,13 @@
       switchTab('discover');
       // Limpa filtros restritivos para garantir visibilidade total dos profissionais de urgência
       document.getElementById('search-input').value = '';
-      document.getElementById('filter-cat').value = 'Todas';
+      document.getElementById('filter-cat').value = 'Veterinário / Emergência';
       document.getElementById('filter-reg').value = 'Todas';
       document.getElementById('filter-comp').value = '';
       STATE.searchQuery = '';
 
       selectScenario('urgencia', true);
-      showToast('🚨 Urgência Ativada: a mostrar veterinários 24h e piquete de ferração.');
+      showToast('🚨 Apoio de Urgência 24h ativado: veterinários disponíveis a qualquer momento.');
 
       setTimeout(() => {
         const target = document.getElementById('emergency-banner') || document.getElementById('results-heading');

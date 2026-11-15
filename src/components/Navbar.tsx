@@ -107,11 +107,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             id="btn-emergency-vet"
             onClick={onEmergencyClick}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#9a5b32]/40 bg-[#9a5b32]/10 text-[#9a5b32] hover:bg-[#9a5b32] hover:text-white text-xs sm:text-sm font-semibold transition-colors cursor-pointer shrink-0"
-            title="Acesso rápido a veterinários de urgência"
+            title="Acesso imediato a apoio veterinário de urgência 24h"
           >
             <AlertCircle className="w-4 h-4 shrink-0" />
-            <span className="hidden sm:inline">Urgência Vet</span>
-            <span className="sm:hidden">Vet</span>
+            <span className="hidden sm:inline">Urgência Vet 24h</span>
+            <span className="sm:hidden">Urgência 24h</span>
           </button>
         </div>
 
