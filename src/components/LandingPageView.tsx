@@ -162,49 +162,60 @@ const PREVIEW_DATA: Record<
 const REGION_HUBS: Record<
   RegionKey,
   {
+    polosCount: number;
+    baseRiders: number;
+    basePros: number;
     circuits: string;
     focus: string;
     demand: string;
-    cx: number;
-    cy: number;
   }
 > = {
   'Porto & Norte': {
-    circuits: 'Esposende • Matosinhos • Braga • Ponte de Lima',
+    polosCount: 14,
+    baseRiders: 18,
+    basePros: 11,
+    circuits: 'Esposende • Matosinhos • Braga • Ponte de Lima • Guimarães',
     focus: 'Saltos de Obstáculos, Centros Hípicos & Transporte Regional',
     demand: 'Alta procura por Grooms e Ferradores ao fim de semana',
-    cx: 96,
-    cy: 64,
   },
   'Ribatejo / Golegã': {
-    circuits: 'Golegã • Santarém • Abrantes • Coruche',
-    focus: 'Dressage, Lusitano, Feira Nacional do Cavalo & Coudelarias',
+    polosCount: 22,
+    baseRiders: 26,
+    basePros: 18,
+    circuits: 'Golegã • Santarém • Abrantes • Coruche • Azambuja',
+    focus: 'Dressage, Cavalo Lusitano, Feira da Golegã & Coudelarias',
     demand: 'Procura intensa de Tratadores, Ferradores e Clínica Equina',
-    cx: 86,
-    cy: 158,
   },
   'Lisboa & Tejo': {
-    circuits: 'Cascais • Beloura • Sociedade Hípica Portuguesa • Mafra',
+    polosCount: 19,
+    baseRiders: 24,
+    basePros: 13,
+    circuits: 'Cascais • Beloura • Sociedade Hípica Portuguesa • Oeiras • Mafra',
     focus: 'CSN/CSI, Estabulagem Premium & Apoio Diário',
     demand: 'Urgência em prova e substituição rápida de Grooms',
-    cx: 56,
-    cy: 202,
   },
   Alentejo: {
-    circuits: 'Évora • Alter do Chão • Elvas • Comporta',
+    polosCount: 16,
+    baseRiders: 11,
+    basePros: 7,
+    circuits: 'Évora • Alter do Chão • Elvas • Comporta • Reguengos',
     focus: 'Coudelarias, Criação, Endurance & Transporte Longo Curso',
     demand: 'Necessidade contínua de Veterinários, Ferradores e Transporte DGAV',
-    cx: 120,
-    cy: 224,
   },
   'Algarve / Vilamoura': {
-    circuits: 'Vilamoura Atlantic Tour • Vale do Lobo • Portimão',
+    polosCount: 11,
+    baseRiders: 14,
+    basePros: 7,
+    circuits: 'Vilamoura Atlantic Tour • Vale do Lobo • Quarteira • Portimão',
     focus: 'Circuitos Internacionais CSI & Temporadas de Inverno',
     demand: 'Equipas internacionais a contratar Grooms e Piquete 24h',
-    cx: 102,
-    cy: 306,
   },
 };
+
+const BASE_TOTAL_LEADS = Object.values(REGION_HUBS).reduce(
+  (sum, hub) => sum + hub.baseRiders + hub.basePros,
+  0
+);
 
 const VERIFICATION_SPECS: Record<
   PreviewCategory,
@@ -412,6 +423,9 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
 
     const updated = [newLead, ...leads];
     setLeads(updated);
+    if (REGION_HUBS[region as RegionKey]) {
+      setActiveRegionHub(region as RegionKey);
+    }
     try {
       localStorage.setItem('equiflow_validation_leads', JSON.stringify(updated));
     } catch {
@@ -440,6 +454,33 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
     scrollToForm();
     setTimeout(() => setRegionNotice(null), 4000);
   };
+
+  const regionMetricsMap = useMemo(() => {
+    const result = {} as Record<
+      RegionKey,
+      { polosCount: number; riders: number; pros: number; totalInscritos: number }
+    >;
+    (Object.keys(REGION_HUBS) as RegionKey[]).forEach((key) => {
+      const hub = REGION_HUBS[key];
+      const extraRiders = leads.filter((l) => l.region === key && l.role === 'cavaleiro').length;
+      const extraPros = leads.filter((l) => l.region === key && l.role === 'profissional').length;
+      const riders = hub.baseRiders + extraRiders;
+      const pros = hub.basePros + extraPros;
+      result[key] = {
+        polosCount: hub.polosCount,
+        riders,
+        pros,
+        totalInscritos: riders + pros,
+      };
+    });
+    return result;
+  }, [leads]);
+
+  const activeRegionMetrics = regionMetricsMap[activeRegionHub];
+  const totalWaitlistCount = BASE_TOTAL_LEADS + leads.length;
+  const activeRegionSharePct = Math.round(
+    (activeRegionMetrics.totalInscritos / totalWaitlistCount) * 100
+  );
 
   const rawPreviewItems = PREVIEW_DATA[previewCategory];
   const previewItems = urgentPreview
@@ -524,7 +565,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
               </div>
               <div>
                 <div className="text-2xl font-extrabold tracking-tight text-[#142e22] tabular-nums">
-                  {142 + leads.length}+
+                  {BASE_TOTAL_LEADS + leads.length}+
                 </div>
                 <div className="text-xs text-[#5c6660] mt-0.5">Inscritos na lista</div>
               </div>
@@ -753,79 +794,405 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
       {/* Interactive Portugal Regional Coverage & Circuits */}
       <section className="rounded-3xl bg-white border border-[#e6e0d5] p-6 sm:p-10 shadow-xs">
         <div className="grid lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-5 flex flex-col items-center justify-center rounded-2xl bg-[#f7f5f0] border border-[#e6e0d5] p-6">
-            <div className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#525c56] mb-3">
-              Clique numa zona de Portugal Continental
+          <div className="lg:col-span-5 flex flex-col items-center justify-center rounded-2xl bg-[#f7f5f0] border border-[#e6e0d5] p-5">
+            <div className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#525c56] mb-2.5 text-center">
+              Clique numa região de Portugal
             </div>
-            {/* Minimalist Geometric Network SVG for Portugal Hubs */}
-            <svg viewBox="0 0 210 350" className="w-48 sm:w-52 h-auto" aria-label="Mapa de cobertura regional EquiFlow">
-              {/* Stylized Portugal Continental Silhouette */}
-              <path
-                d="M78,24 L132,20 L152,48 L146,96 L154,140 L142,186 L156,232 L144,274 L134,316 L98,324 L66,312 L72,272 L50,224 L42,188 L56,144 L62,92 Z"
-                fill="#ebe6da"
-                stroke="#d3cab9"
-                strokeWidth="2"
-              />
-              {/* Connections */}
-              <line x1="96" y1="64" x2="86" y2="158" stroke="#c5baa6" strokeWidth="1.5" strokeDasharray="3 3" />
-              <line x1="86" y1="158" x2="56" y2="202" stroke="#c5baa6" strokeWidth="1.5" strokeDasharray="3 3" />
-              <line x1="86" y1="158" x2="120" y2="224" stroke="#c5baa6" strokeWidth="1.5" strokeDasharray="3 3" />
-              <line x1="120" y1="224" x2="102" y2="306" stroke="#c5baa6" strokeWidth="1.5" strokeDasharray="3 3" />
+            <svg
+              viewBox="-122 14 428 460"
+              className="w-full max-w-[330px] h-auto select-none"
+              role="img"
+              aria-label="Mapa interativo das 5 regiões de Portugal Continental no EquiFlow"
+            >
+              {/* Subtle compass mark */}
+              <g transform="translate(-8, 46)" aria-hidden="true">
+                <circle cx="0" cy="0" r="12" fill="#ffffff" stroke="#d9d1c0" strokeWidth="1" />
+                <path d="M0,-8 L2.6,-1 L0,-3 L-2.6,-1 Z" fill="#94522a" />
+                <text x="0" y="7" textAnchor="middle" fontSize="6.5" fontWeight="800" fill="#505b54">
+                  N
+                </text>
+              </g>
 
-              {(Object.keys(REGION_HUBS) as RegionKey[]).map((key) => {
-                const hub = REGION_HUBS[key];
-                const isSelected = activeRegionHub === key;
-                return (
-                  <g
-                    key={key}
-                    onClick={() => setActiveRegionHub(key)}
-                    className="cursor-pointer"
-                  >
-                    {isSelected && (
-                      <circle cx={hub.cx} cy={hub.cy} r="18" fill="#142e22" opacity="0.14" />
-                    )}
-                    <circle
-                      cx={hub.cx}
-                      cy={hub.cy}
-                      r={isSelected ? '8.5' : '6'}
-                      fill={isSelected ? '#94522a' : '#142e22'}
-                      stroke="#ffffff"
-                      strokeWidth="2.5"
-                    />
-                  </g>
-                );
-              })}
+              {/* 1. Porto & Norte */}
+              <g
+                role="button"
+                tabIndex={0}
+                aria-label={`Porto & Norte: ${regionMetricsMap['Porto & Norte'].polosCount} polos hípicos, ${regionMetricsMap['Porto & Norte'].totalInscritos} pessoas inscritas`}
+                onClick={() => setActiveRegionHub('Porto & Norte')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveRegionHub('Porto & Norte');
+                  }
+                }}
+                className="cursor-pointer outline-none group"
+              >
+                <title>Porto &amp; Norte — Clique para ver polos hípicos e inscritos</title>
+                <path
+                  d="M 77.5,130.2 L 78.5,121.4 L 78.3,115.8 L 77.3,110.3 L 75.5,102.7 L 73.0,93.1 L 71.2,85.1 L 70.2,78.8 L 69.1,72.3 L 67.8,65.6 L 66.5,58.4 L 64.5,47.1 L 75.2,37.0 L 86.1,31.3 L 100.6,26.7 L 108.9,28.8 L 110.8,37.6 L 113.1,44.4 L 115.7,49.0 L 120.9,50.0 L 128.6,47.5 L 138.2,47.3 L 149.5,49.4 L 160.8,49.2 L 172.1,46.7 L 185.9,43.7 L 202.1,40.4 L 212.9,42.7 L 218.4,50.7 L 225.4,60.5 L 233.8,72.3 L 233.8,82.4 L 225.4,90.8 L 213.6,100.4 L 190.8,116.8 L 169.9,114.3 L 156.0,114.7 L 142.0,117.2 L 127.6,120.2 L 112.8,123.5 L 98.4,126.5 L 77.5,130.2 Z"
+                  fill={activeRegionHub === 'Porto & Norte' ? '#142e22' : '#dce7e0'}
+                  stroke={activeRegionHub === 'Porto & Norte' ? '#0d2017' : '#495a4f'}
+                  strokeWidth={activeRegionHub === 'Porto & Norte' ? '1.65' : '1.25'}
+                  strokeLinejoin="round"
+                  className="transition-colors duration-150"
+                />
+                {activeRegionHub === 'Porto & Norte' && (
+                  <circle cx="134" cy="71" r="15" fill="#94522a" opacity="0.25" />
+                )}
+                <circle
+                  cx="134"
+                  cy="71"
+                  r="6"
+                  fill={activeRegionHub === 'Porto & Norte' ? '#94522a' : '#142e22'}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                />
+                <text
+                  x="136"
+                  y="92"
+                  textAnchor="middle"
+                  fontSize="10.5"
+                  fontWeight="800"
+                  fill={activeRegionHub === 'Porto & Norte' ? '#ffffff' : '#142e22'}
+                  className="pointer-events-none"
+                >
+                  Porto &amp; Norte
+                </text>
+                <text
+                  x="136"
+                  y="104"
+                  textAnchor="middle"
+                  fontSize="8.5"
+                  fontWeight="700"
+                  fill={activeRegionHub === 'Porto & Norte' ? '#e3b778' : '#47564d'}
+                  className="pointer-events-none"
+                >
+                  {regionMetricsMap['Porto & Norte'].polosCount} polos •{' '}
+                  {regionMetricsMap['Porto & Norte'].totalInscritos} inscr.
+                </text>
+              </g>
+
+              {/* 2. Ribatejo / Golegã */}
+              <g
+                role="button"
+                tabIndex={0}
+                aria-label={`Ribatejo / Golegã: ${regionMetricsMap['Ribatejo / Golegã'].polosCount} polos hípicos, ${regionMetricsMap['Ribatejo / Golegã'].totalInscritos} pessoas inscritas`}
+                onClick={() => setActiveRegionHub('Ribatejo / Golegã')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveRegionHub('Ribatejo / Golegã');
+                  }
+                }}
+                className="cursor-pointer outline-none"
+              >
+                <title>Ribatejo / Golegã — Clique para ver polos hípicos e inscritos</title>
+                <path
+                  d="M 77.5,130.2 L 98.4,126.5 L 112.8,123.5 L 127.6,120.2 L 142.0,117.2 L 156.0,114.7 L 169.9,114.3 L 190.8,116.8 L 195.6,130.7 L 197.2,140.3 L 197.2,150.4 L 196.6,160.9 L 195.3,171.8 L 192.7,180.8 L 188.8,188.0 L 188.8,194.9 L 192.7,201.6 L 192.7,208.8 L 186.9,220.1 L 162.6,228.9 L 150.3,233.3 L 141.9,236.3 L 130.9,240.7 L 117.3,246.6 L 105.3,253.3 L 95.0,260.9 L 86.5,269.7 L 80.1,279.8 L 74.3,289.8 L 66.5,305.0 L 59.2,296.1 L 54.2,290.9 L 49.0,286.3 L 42.7,282.1 L 31.5,276.4 L 33.5,268.8 L 33.2,264.2 L 31.2,260.0 L 33.0,256.2 L 38.5,252.9 L 43.7,247.8 L 48.5,241.1 L 51.8,234.2 L 53.4,227.1 L 56.1,219.5 L 60.0,211.5 L 62.4,203.5 L 63.4,195.6 L 65.2,185.9 L 67.8,174.6 L 69.9,164.3 L 71.5,155.0 L 73.6,145.4 L 77.5,130.2 Z"
+                  fill={activeRegionHub === 'Ribatejo / Golegã' ? '#142e22' : '#eee5d3'}
+                  stroke={activeRegionHub === 'Ribatejo / Golegã' ? '#0d2017' : '#495a4f'}
+                  strokeWidth={activeRegionHub === 'Ribatejo / Golegã' ? '1.65' : '1.25'}
+                  strokeLinejoin="round"
+                  className="transition-colors duration-150"
+                />
+                {activeRegionHub === 'Ribatejo / Golegã' && (
+                  <circle cx="122" cy="176" r="15" fill="#94522a" opacity="0.25" />
+                )}
+                <circle
+                  cx="122"
+                  cy="176"
+                  r="6"
+                  fill={activeRegionHub === 'Ribatejo / Golegã' ? '#94522a' : '#142e22'}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                />
+                <text
+                  x="124"
+                  y="198"
+                  textAnchor="middle"
+                  fontSize="10.5"
+                  fontWeight="800"
+                  fill={activeRegionHub === 'Ribatejo / Golegã' ? '#ffffff' : '#142e22'}
+                  className="pointer-events-none"
+                >
+                  Ribatejo / Golegã
+                </text>
+                <text
+                  x="124"
+                  y="210"
+                  textAnchor="middle"
+                  fontSize="8.5"
+                  fontWeight="700"
+                  fill={activeRegionHub === 'Ribatejo / Golegã' ? '#e3b778' : '#47564d'}
+                  className="pointer-events-none"
+                >
+                  {regionMetricsMap['Ribatejo / Golegã'].polosCount} polos •{' '}
+                  {regionMetricsMap['Ribatejo / Golegã'].totalInscritos} inscr.
+                </text>
+              </g>
+
+              {/* 3. Lisboa & Tejo */}
+              <g
+                role="button"
+                tabIndex={0}
+                aria-label={`Lisboa & Tejo: ${regionMetricsMap['Lisboa & Tejo'].polosCount} polos hípicos, ${regionMetricsMap['Lisboa & Tejo'].totalInscritos} pessoas inscritas`}
+                onClick={() => setActiveRegionHub('Lisboa & Tejo')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveRegionHub('Lisboa & Tejo');
+                  }
+                }}
+                className="cursor-pointer outline-none"
+              >
+                <title>Lisboa &amp; Tejo — Clique para ver polos hípicos e inscritos</title>
+                <path
+                  d="M 31.5,276.4 L 28.9,290.7 L 23.8,306.6 L 28.9,314.2 L 41.9,313.4 L 47.7,311.7 L 55.5,303.3 L 60.0,310.8 L 53.5,316.7 L 44.5,315.0 L 41.2,320.1 L 43.8,331.0 L 41.9,337.7 L 51.0,335.2 L 63.2,329.3 L 68.6,319.9 L 69.4,313.8 L 66.5,305.0 L 59.2,296.1 L 54.2,290.9 L 49.0,286.3 L 42.7,282.1 L 31.5,276.4 Z"
+                  fill={activeRegionHub === 'Lisboa & Tejo' ? '#142e22' : '#ebd6c8'}
+                  stroke={activeRegionHub === 'Lisboa & Tejo' ? '#0d2017' : '#495a4f'}
+                  strokeWidth={activeRegionHub === 'Lisboa & Tejo' ? '1.65' : '1.25'}
+                  strokeLinejoin="round"
+                  className="transition-colors duration-150"
+                />
+                <line
+                  x1="40.6"
+                  y1="305"
+                  x2="0"
+                  y2="305"
+                  stroke={activeRegionHub === 'Lisboa & Tejo' ? '#94522a' : '#8d8473'}
+                  strokeWidth={activeRegionHub === 'Lisboa & Tejo' ? '1.65' : '1.2'}
+                  strokeDasharray={activeRegionHub === 'Lisboa & Tejo' ? undefined : '2.5 2'}
+                />
+                {activeRegionHub === 'Lisboa & Tejo' && (
+                  <circle cx="40.6" cy="305" r="14" fill="#94522a" opacity="0.25" />
+                )}
+                <circle
+                  cx="40.6"
+                  cy="305"
+                  r="5.5"
+                  fill={activeRegionHub === 'Lisboa & Tejo' ? '#94522a' : '#142e22'}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="-112"
+                  y="288"
+                  width="112"
+                  height="34"
+                  rx="8"
+                  fill={activeRegionHub === 'Lisboa & Tejo' ? '#142e22' : '#ffffff'}
+                  stroke={activeRegionHub === 'Lisboa & Tejo' ? '#142e22' : '#cfc5b3'}
+                  strokeWidth="1"
+                />
+                <text
+                  x="-56"
+                  y="302"
+                  textAnchor="middle"
+                  fontSize="10.5"
+                  fontWeight="800"
+                  fill={activeRegionHub === 'Lisboa & Tejo' ? '#ffffff' : '#142e22'}
+                  className="pointer-events-none"
+                >
+                  Lisboa &amp; Tejo
+                </text>
+                <text
+                  x="-56"
+                  y="314"
+                  textAnchor="middle"
+                  fontSize="8.5"
+                  fontWeight="700"
+                  fill={activeRegionHub === 'Lisboa & Tejo' ? '#e3b778' : '#47564d'}
+                  className="pointer-events-none"
+                >
+                  {regionMetricsMap['Lisboa & Tejo'].polosCount} polos •{' '}
+                  {regionMetricsMap['Lisboa & Tejo'].totalInscritos} inscr.
+                </text>
+              </g>
+
+              {/* 4. Alentejo */}
+              <g
+                role="button"
+                tabIndex={0}
+                aria-label={`Alentejo: ${regionMetricsMap['Alentejo'].polosCount} polos hípicos, ${regionMetricsMap['Alentejo'].totalInscritos} pessoas inscritas`}
+                onClick={() => setActiveRegionHub('Alentejo')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveRegionHub('Alentejo');
+                  }
+                }}
+                className="cursor-pointer outline-none"
+              >
+                <title>Alentejo — Clique para ver polos hípicos e inscritos</title>
+                <path
+                  d="M 66.5,305.0 L 74.3,289.8 L 80.1,279.8 L 86.5,269.7 L 95.0,260.9 L 105.3,253.3 L 117.3,246.6 L 130.9,240.7 L 141.9,236.3 L 150.3,233.3 L 162.6,228.9 L 186.9,220.1 L 175.2,230.2 L 170.4,238.4 L 168.4,248.1 L 170.0,257.9 L 175.2,268.0 L 179.4,276.8 L 182.7,284.4 L 183.8,291.1 L 182.8,297.0 L 179.3,303.7 L 173.1,311.3 L 169.1,320.5 L 167.1,331.4 L 168.7,340.7 L 173.9,348.2 L 177.2,354.3 L 178.5,358.9 L 176.2,366.1 L 170.4,375.7 L 164.2,385.2 L 157.7,394.4 L 154.7,403.5 L 155.2,416.7 L 131.9,421.7 L 118.7,424.2 L 108.1,425.9 L 98.4,426.3 L 89.6,425.5 L 81.2,423.6 L 69.1,419.2 L 69.6,411.6 L 69.7,405.6 L 69.7,398.4 L 68.1,390.2 L 64.9,381.0 L 65.0,371.5 L 68.6,361.9 L 70.0,352.8 L 69.4,344.4 L 67.6,338.1 L 64.7,333.9 L 63.2,331.2 L 63.2,329.3 L 68.6,319.9 L 69.4,313.8 L 66.5,305.0 Z"
+                  fill={activeRegionHub === 'Alentejo' ? '#142e22' : '#e4dfd1'}
+                  stroke={activeRegionHub === 'Alentejo' ? '#0d2017' : '#495a4f'}
+                  strokeWidth={activeRegionHub === 'Alentejo' ? '1.65' : '1.25'}
+                  strokeLinejoin="round"
+                  className="transition-colors duration-150"
+                />
+                {activeRegionHub === 'Alentejo' && (
+                  <circle cx="122" cy="328" r="15" fill="#94522a" opacity="0.25" />
+                )}
+                <circle
+                  cx="122"
+                  cy="328"
+                  r="6"
+                  fill={activeRegionHub === 'Alentejo' ? '#94522a' : '#142e22'}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                />
+                <text
+                  x="122"
+                  y="349"
+                  textAnchor="middle"
+                  fontSize="10.5"
+                  fontWeight="800"
+                  fill={activeRegionHub === 'Alentejo' ? '#ffffff' : '#142e22'}
+                  className="pointer-events-none"
+                >
+                  Alentejo
+                </text>
+                <text
+                  x="122"
+                  y="361"
+                  textAnchor="middle"
+                  fontSize="8.5"
+                  fontWeight="700"
+                  fill={activeRegionHub === 'Alentejo' ? '#e3b778' : '#47564d'}
+                  className="pointer-events-none"
+                >
+                  {regionMetricsMap['Alentejo'].polosCount} polos •{' '}
+                  {regionMetricsMap['Alentejo'].totalInscritos} inscr.
+                </text>
+              </g>
+
+              {/* 5. Algarve / Vilamoura */}
+              <g
+                role="button"
+                tabIndex={0}
+                aria-label={`Algarve / Vilamoura: ${regionMetricsMap['Algarve / Vilamoura'].polosCount} polos hípicos, ${regionMetricsMap['Algarve / Vilamoura'].totalInscritos} pessoas inscritas`}
+                onClick={() => setActiveRegionHub('Algarve / Vilamoura')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveRegionHub('Algarve / Vilamoura');
+                  }
+                }}
+                className="cursor-pointer outline-none"
+              >
+                <title>Algarve / Vilamoura — Clique para ver polos hípicos e inscritos</title>
+                <path
+                  d="M 69.1,419.2 L 66.6,426.8 L 64.9,432.2 L 62.9,438.1 L 60.7,444.4 L 58.1,451.1 L 61.1,453.0 L 69.9,450.1 L 77.3,448.2 L 83.5,447.3 L 91.1,447.6 L 100.1,448.8 L 106.8,449.9 L 111.0,450.7 L 116.3,452.2 L 122.8,454.3 L 129.3,454.3 L 135.7,452.2 L 141.7,449.7 L 147.2,446.7 L 152.2,444.4 L 156.8,442.7 L 158.4,439.8 L 157.1,435.6 L 156.1,429.3 L 155.2,416.7 L 131.9,421.7 L 118.7,424.2 L 108.1,425.9 L 98.4,426.3 L 89.6,425.5 L 81.2,423.6 L 69.1,419.2 Z"
+                  fill={activeRegionHub === 'Algarve / Vilamoura' ? '#142e22' : '#eadbb9'}
+                  stroke={activeRegionHub === 'Algarve / Vilamoura' ? '#0d2017' : '#495a4f'}
+                  strokeWidth={activeRegionHub === 'Algarve / Vilamoura' ? '1.65' : '1.25'}
+                  strokeLinejoin="round"
+                  className="transition-colors duration-150"
+                />
+                <line
+                  x1="109.2"
+                  y1="441.5"
+                  x2="170"
+                  y2="441.5"
+                  stroke={activeRegionHub === 'Algarve / Vilamoura' ? '#94522a' : '#8d8473'}
+                  strokeWidth={activeRegionHub === 'Algarve / Vilamoura' ? '1.65' : '1.2'}
+                  strokeDasharray={activeRegionHub === 'Algarve / Vilamoura' ? undefined : '2.5 2'}
+                />
+                {activeRegionHub === 'Algarve / Vilamoura' && (
+                  <circle cx="109.2" cy="441.5" r="14" fill="#94522a" opacity="0.25" />
+                )}
+                <circle
+                  cx="109.2"
+                  cy="441.5"
+                  r="5.5"
+                  fill={activeRegionHub === 'Algarve / Vilamoura' ? '#94522a' : '#142e22'}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="170"
+                  y="424.5"
+                  width="124"
+                  height="34"
+                  rx="8"
+                  fill={activeRegionHub === 'Algarve / Vilamoura' ? '#142e22' : '#ffffff'}
+                  stroke={activeRegionHub === 'Algarve / Vilamoura' ? '#142e22' : '#cfc5b3'}
+                  strokeWidth="1"
+                />
+                <text
+                  x="232"
+                  y="438.5"
+                  textAnchor="middle"
+                  fontSize="10.5"
+                  fontWeight="800"
+                  fill={activeRegionHub === 'Algarve / Vilamoura' ? '#ffffff' : '#142e22'}
+                  className="pointer-events-none"
+                >
+                  Algarve / Vilamoura
+                </text>
+                <text
+                  x="232"
+                  y="450.5"
+                  textAnchor="middle"
+                  fontSize="8.5"
+                  fontWeight="700"
+                  fill={activeRegionHub === 'Algarve / Vilamoura' ? '#e3b778' : '#47564d'}
+                  className="pointer-events-none"
+                >
+                  {regionMetricsMap['Algarve / Vilamoura'].polosCount} polos •{' '}
+                  {regionMetricsMap['Algarve / Vilamoura'].totalInscritos} inscr.
+                </text>
+              </g>
             </svg>
+
+            <div className="mt-2.5 pt-2.5 border-t border-[#e2dcd0] w-full flex flex-wrap items-center justify-between gap-2 text-xs text-[#525c56] tabular-nums">
+              <span className="font-bold text-[#161d19]">{activeRegionHub}</span>
+              <span>
+                {activeRegionMetrics.polosCount} polos hípicos •{' '}
+                <strong className="text-[#161d19]">{activeRegionMetrics.totalInscritos} inscritos</strong>
+              </span>
+            </div>
           </div>
 
           <div className="lg:col-span-7 space-y-6">
             <div className="space-y-1.5">
               <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#94522a]">
-                Cobertura Nacional
+                Cobertura Nacional Interativa
               </span>
               <h2 className="!font-sans text-2xl sm:text-3xl font-bold tracking-tight text-[#161d19]">
                 Onde o EquiFlow entra primeiro
               </h2>
               <p className="text-sm text-[#525c56]">
-                Selecione uma região para ver os principais polos hípicos e reservar prioridade na sua zona.
+                Clique numa região diretamente no mapa de Portugal Continental para consultar quantos
+                polos hípicos existem na zona e quantas pessoas já estão inscritas.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-2">
               {(Object.keys(REGION_HUBS) as RegionKey[]).map((hub) => {
                 const active = activeRegionHub === hub;
+                const m = regionMetricsMap[hub];
                 return (
                   <button
                     key={hub}
                     type="button"
                     onClick={() => setActiveRegionHub(hub)}
-                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                    className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                       active
                         ? 'bg-[#142e22] text-white border-[#142e22]'
                         : 'bg-[#f7f5f0] text-[#161d19] border-[#e2dcd0] hover:border-[#bfb5a3]'
                     }`}
                   >
-                    {hub}
+                    <span>{hub}</span>
+                    <span
+                      className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full tabular-nums ${
+                        active ? 'bg-[#94522a] text-white' : 'bg-[#e4ded0] text-[#142e22]'
+                      }`}
+                    >
+                      {m.totalInscritos}
+                    </span>
                   </button>
                 );
               })}
@@ -834,15 +1201,40 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
             <div className="rounded-2xl bg-[#f7f5f0] border border-[#e6e0d5] p-6 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 className="!font-sans text-lg font-bold text-[#161d19]">{activeRegionHub}</h3>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-white border border-[#e2dcd0] text-[#142e22]">
-                  Abertura Prioritária
+                <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-white border border-[#e2dcd0] text-[#142e22] tabular-nums">
+                  {activeRegionSharePct}% da procura nacional
                 </span>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4 py-3.5 border-y border-[#e2dcd0]">
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#78827c]">
+                    Polos Hípicos na Zona
+                  </div>
+                  <div className="text-3xl font-extrabold tracking-tight text-[#142e22] tabular-nums mt-1">
+                    {activeRegionMetrics.polosCount}
+                  </div>
+                  <div className="text-xs text-[#525c56] mt-0.5">
+                    Centros, coudelarias e pistas ativas
+                  </div>
+                </div>
+                <div className="sm:border-l sm:border-[#e2dcd0] sm:pl-4 pt-3 sm:pt-0 border-t sm:border-t-0 border-[#e2dcd0]">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#78827c]">
+                    Pessoas Inscritas na Região
+                  </div>
+                  <div className="text-3xl font-extrabold tracking-tight text-[#94522a] tabular-nums mt-1">
+                    {activeRegionMetrics.totalInscritos}
+                  </div>
+                  <div className="text-xs text-[#525c56] mt-0.5 tabular-nums">
+                    {activeRegionMetrics.riders} cavaleiros • {activeRegionMetrics.pros} profissionais
+                  </div>
+                </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4 text-sm">
                 <div>
                   <div className="text-[11px] font-bold uppercase tracking-wider text-[#78827c]">
-                    Concursos &amp; Polos
+                    Principais Polos &amp; Concursos
                   </div>
                   <div className="font-medium text-[#161d19] mt-1">{activeHubInfo.circuits}</div>
                 </div>
@@ -1181,7 +1573,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
             </div>
 
             <div className="pt-4 border-t border-white/15 text-xs text-[#c7d4cd]">
-              <strong className="text-white">{142 + leads.length} inscritos</strong> já validaram o
+              <strong className="text-white">{BASE_TOTAL_LEADS + leads.length} inscritos</strong> já validaram o
               interesse nesta fase.
             </div>
           </div>
