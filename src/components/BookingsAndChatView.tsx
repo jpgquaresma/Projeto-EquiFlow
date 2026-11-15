@@ -119,7 +119,7 @@ export const BookingsAndChatView: React.FC<BookingsAndChatViewProps> = ({
                   <div className="flex items-center justify-between">
                     <span className="inline-flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5" />
-                      {bk.startDate} • {bk.days} dia(s)
+                      {bk.startDate} • {bk.days} {bk.rateUnit === 'km' ? 'km' : `${bk.rateUnit ?? 'dia'}(s)`}
                     </span>
                     <span className="font-bold text-[#1e2420]">{bk.total} €</span>
                   </div>
@@ -140,7 +140,7 @@ export const BookingsAndChatView: React.FC<BookingsAndChatViewProps> = ({
                 {activeBooking.professionalName} — {activeBooking.eventOrLocation}
               </h3>
               <p className="text-xs text-[#5c645e]">
-                {activeBooking.days} dia(s) • {activeBooking.horsesCount} cavalo(s) • Total{' '}
+                {activeBooking.days} {activeBooking.rateUnit === 'km' ? 'km' : `${activeBooking.rateUnit ?? 'dia'}(s)`} • {activeBooking.horsesCount} cavalo(s) • Total{' '}
                 <strong className="text-[#1e2420]">{activeBooking.total} €</strong> ({activeBooking.paymentMethod})
               </p>
             </div>

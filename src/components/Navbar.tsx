@@ -42,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       icon: <MessageSquare className="w-4 h-4" />,
       badge: bookingsCount > 0 ? bookingsCount : undefined,
     },
-    { id: 'pro-area', label: 'Área Profissional', icon: <Briefcase className="w-4 h-4" /> },
+    { id: 'pro-area', label: 'Sou Profissional', icon: <Briefcase className="w-4 h-4" /> },
   ];
 
   return (

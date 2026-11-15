@@ -52,7 +52,7 @@ export const ProfessionalCard: React.FC<ProfessionalCardProps> = ({
                 )}
               </div>
               <p className="text-xs font-semibold uppercase tracking-wider text-[#9a5b32] mt-0.5">
-                {pro.category}
+                {pro.category} • {pro.experienceYears} anos exp.
               </p>
             </div>
           </div>
@@ -68,10 +68,15 @@ export const ProfessionalCard: React.FC<ProfessionalCardProps> = ({
           )}
         </div>
 
-        {/* Headline */}
+        {/* Headline & Short Bio */}
         <p className="text-sm text-[#1e2420] font-medium mt-3.5 leading-relaxed">
           {pro.headline}
         </p>
+        {pro.bio && (
+          <p className="text-xs text-[#5c645e] mt-1.5 leading-relaxed line-clamp-2">
+            {pro.bio}
+          </p>
+        )}
 
         {/* Location & Availability */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-xs text-[#5c645e]">

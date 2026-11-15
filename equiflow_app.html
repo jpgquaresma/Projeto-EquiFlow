@@ -595,30 +595,144 @@
     <section id="tab-pro-area" class="hidden space-y-6 max-w-4xl mx-auto">
       <div class="bg-white p-6 rounded-2xl border border-[#e2dcd0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-          <img id="pro-area-avatar" src="" alt="Inês Magalhães" class="w-16 h-16 rounded-full object-cover border border-[#e2dcd0]" />
+          <img id="pro-area-avatar" src="" alt="Foto de perfil" class="w-16 h-16 rounded-full object-cover border border-[#e2dcd0] shrink-0" />
           <div>
-            <div class="flex items-center gap-2">
-              <h2 class="font-serif-editorial font-bold text-xl text-[#19201c]">Inês Magalhães</h2>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h2 id="pro-area-name" class="font-serif-editorial font-bold text-xl text-[#19201c]">Inês Magalhães</h2>
               <span class="text-[10px] bg-[#e8f0ec] text-[#173326] px-2 py-0.5 rounded-full font-bold">✓ Identidade & Referências Verificadas</span>
             </div>
-            <p class="text-xs text-[#94522a] font-bold uppercase tracking-wider mt-0.5">Groom de Concurso & Maneio • Lisboa & Tejo</p>
-            <p class="text-xs text-[#58615b] mt-1">64 trabalhos concluídos na EquiFlow • Avaliação média 4.9 ★</p>
+            <p id="pro-area-meta" class="text-xs text-[#94522a] font-bold uppercase tracking-wider mt-0.5">Groom / Tratador • Lisboa & Tejo • 7 anos exp.</p>
+            <p id="pro-area-stats" class="text-xs text-[#58615b] mt-1">Tarifa atual: 85 € / dia • 64 trabalhos concluídos na EquiFlow • Avaliação média 4.9 ★</p>
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2.5">
-          <button type="button" onclick="toggleMyProAvailability()" id="btn-my-availability" class="px-4 py-2 rounded-xl bg-[#e8f0ec] text-[#173326] border border-[#173326] text-xs font-bold cursor-pointer">
-            ● Disponível para Contratação
-          </button>
-          <div class="flex items-center gap-1.5 bg-[#f8f6f1] p-1.5 rounded-xl border border-[#e2dcd0]">
-            <span class="text-xs text-[#58615b] pl-2">Tarifa/dia:</span>
-            <input id="my-pro-rate" type="number" value="85" class="w-16 px-2 py-1 bg-white border border-[#e2dcd0] rounded-lg text-xs font-bold text-center" />
-            <button type="button" onclick="updateMyProRate()" class="px-3 py-1.5 rounded-lg bg-[#173326] text-white text-xs font-bold cursor-pointer">
-              Atualizar
-            </button>
+        <button type="button" onclick="toggleMyProAvailability()" id="btn-my-availability" class="px-4 py-2.5 rounded-xl bg-[#e8f0ec] text-[#173326] border border-[#173326] text-xs font-bold cursor-pointer shrink-0">
+          ● Disponível para Contratação
+        </button>
+      </div>
+
+      <!-- EDITAR PERFIL PROFISSIONAL -->
+      <form onsubmit="saveMyProProfile(event)" class="bg-white p-6 rounded-2xl border border-[#e2dcd0] space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#e2dcd0]">
+          <div>
+            <h3 class="font-serif-editorial font-bold text-lg text-[#19201c]">Editar Perfil Profissional</h3>
+            <p class="text-xs text-[#58615b]">Atualiza a tua fotografia, modelo de cobrança (hora, dia, cavalo, serviço ou km), região, experiência e descrição.</p>
+          </div>
+          <span id="pro-profile-saved-badge" class="hidden text-xs font-bold text-[#173326] bg-[#e8f0ec] px-3 py-1 rounded-full">✓ Perfil guardado</span>
+        </div>
+
+        <!-- Fotografia -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-[#f8f6f1] border border-[#e2dcd0]">
+          <img id="my-pro-photo-preview" src="" alt="Pré-visualização da fotografia" class="w-20 h-20 rounded-full object-cover border-2 border-white shadow-xs shrink-0" />
+          <div class="flex-1 space-y-2">
+            <div>
+              <span class="block text-xs font-bold text-[#19201c]">Fotografia de Perfil</span>
+              <p class="text-[11px] text-[#58615b]">Carrega uma fotografia do teu dispositivo ou escolhe um dos modelos abaixo.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <input id="my-pro-photo-file" type="file" accept="image/*" onchange="handleMyProPhotoUpload(event)" class="hidden" />
+              <button type="button" onclick="document.getElementById('my-pro-photo-file').click()" class="px-3.5 py-2 rounded-lg bg-white border border-[#e2dcd0] text-xs font-bold text-[#19201c] hover:border-[#173326] cursor-pointer">
+                📷 Carregar fotografia
+              </button>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[11px] text-[#58615b]">Modelos:</span>
+                <button type="button" onclick="selectMyProAvatarPreset('groom1')" class="w-7 h-7 rounded-full overflow-hidden border border-[#e2dcd0] hover:border-[#173326] cursor-pointer" title="Foto 1"><img id="preset-img-1" src="" alt="Modelo 1" class="w-full h-full object-cover" /></button>
+                <button type="button" onclick="selectMyProAvatarPreset('groom2')" class="w-7 h-7 rounded-full overflow-hidden border border-[#e2dcd0] hover:border-[#173326] cursor-pointer" title="Foto 2"><img id="preset-img-2" src="" alt="Modelo 2" class="w-full h-full object-cover" /></button>
+                <button type="button" onclick="selectMyProAvatarPreset('groom3')" class="w-7 h-7 rounded-full overflow-hidden border border-[#e2dcd0] hover:border-[#173326] cursor-pointer" title="Foto 3"><img id="preset-img-3" src="" alt="Modelo 3" class="w-full h-full object-cover" /></button>
+                <button type="button" onclick="selectMyProAvatarPreset('groom4')" class="w-7 h-7 rounded-full overflow-hidden border border-[#e2dcd0] hover:border-[#173326] cursor-pointer" title="Foto 4"><img id="preset-img-4" src="" alt="Modelo 4" class="w-full h-full object-cover" /></button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        <!-- Nome, Categoria e Experiência -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div>
+            <label for="my-pro-name" class="block text-xs font-bold text-[#19201c] mb-1">Nome profissional</label>
+            <input id="my-pro-name" type="text" required class="w-full px-3.5 py-2.5 bg-white border border-[#e2dcd0] rounded-xl text-xs font-semibold text-[#19201c] focus:outline-none focus:border-[#173326]" />
+          </div>
+          <div>
+            <label for="my-pro-category" class="block text-xs font-bold text-[#19201c] mb-1">Área de serviço</label>
+            <select id="my-pro-category" onchange="handleMyProCategoryChange()" class="w-full px-3.5 py-2.5 bg-white border border-[#e2dcd0] rounded-xl text-xs font-semibold text-[#19201c] focus:outline-none focus:border-[#173326] cursor-pointer">
+              <option value="Groom / Tratador">Groom / Tratador</option>
+              <option value="Ferrador">Ferrador</option>
+              <option value="Veterinário / Emergência">Veterinário / Emergência</option>
+              <option value="Transporte">Transporte (Transportador de Cavalos)</option>
+              <option value="Treinador">Treinador</option>
+            </select>
+          </div>
+          <div>
+            <label for="my-pro-exp" class="block text-xs font-bold text-[#19201c] mb-1">Anos de experiência</label>
+            <input id="my-pro-exp" type="number" min="0" max="60" required class="w-full px-3.5 py-2.5 bg-white border border-[#e2dcd0] rounded-xl text-xs font-bold text-[#19201c] focus:outline-none focus:border-[#173326]" />
+          </div>
+        </div>
+
+        <!-- Região e Zona -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label for="my-pro-region" class="block text-xs font-bold text-[#19201c] mb-1">Região que trabalha</label>
+            <select id="my-pro-region" class="w-full px-3.5 py-2.5 bg-white border border-[#e2dcd0] rounded-xl text-xs font-semibold text-[#19201c] focus:outline-none focus:border-[#173326] cursor-pointer">
+              <option value="Lisboa & Tejo">Lisboa & Tejo</option>
+              <option value="Ribatejo / Golegã">Ribatejo / Golegã</option>
+              <option value="Algarve / Vilamoura">Algarve / Vilamoura</option>
+              <option value="Porto & Norte">Porto & Norte</option>
+              <option value="Alentejo">Alentejo</option>
+            </select>
+          </div>
+          <div>
+            <label for="my-pro-city" class="block text-xs font-bold text-[#19201c] mb-1">Concelhos / Zona específica</label>
+            <input id="my-pro-city" type="text" placeholder="Ex: Cascais / Sociedade Hípica, ou Todo o País" class="w-full px-3.5 py-2.5 bg-white border border-[#e2dcd0] rounded-xl text-xs font-semibold text-[#19201c] focus:outline-none focus:border-[#173326]" />
+          </div>
+        </div>
+
+        <!-- Tipo de tarifa e valor -->
+        <div class="p-4 rounded-xl bg-[#f8f6f1] border border-[#e2dcd0] space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="block text-xs font-bold text-[#19201c]">Como trabalha / Tipo de tarifa</span>
+              <p class="text-[11px] text-[#58615b]">Seleciona se trabalhas por hora, dia, cavalo, serviço ou por KMs (transportador de cavalos).</p>
+            </div>
+            <span id="my-pro-rate-preview" class="text-xs font-bold px-3 py-1 rounded-full bg-white border border-[#e2dcd0] text-[#173326]">85 € / dia</span>
+          </div>
+
+          <input id="my-pro-unit" type="hidden" value="dia" />
+          <div id="my-pro-unit-buttons" class="flex flex-wrap gap-2">
+            <button type="button" data-unit="hora" onclick="selectMyRateUnit('hora')" class="px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer">Por hora</button>
+            <button type="button" data-unit="dia" onclick="selectMyRateUnit('dia')" class="px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer">Por dia</button>
+            <button type="button" data-unit="cavalo" onclick="selectMyRateUnit('cavalo')" class="px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer">Por cavalo</button>
+            <button type="button" data-unit="serviço" onclick="selectMyRateUnit('serviço')" class="px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer">Por serviço</button>
+            <button type="button" data-unit="km" onclick="selectMyRateUnit('km')" class="px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer">🚚 Por km (Transportador)</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+            <div>
+              <label for="my-pro-rate" class="block text-xs font-bold text-[#19201c] mb-1">Valor da tarifa (€)</label>
+              <div class="flex items-center gap-2">
+                <input id="my-pro-rate" type="number" min="0.5" step="0.5" value="85" oninput="updateRatePreview()" required class="w-32 px-3 py-2 bg-white border border-[#e2dcd0] rounded-xl text-xs font-bold text-[#19201c] focus:outline-none focus:border-[#173326]" />
+                <span id="my-pro-rate-unit-label" class="text-xs font-semibold text-[#58615b]">€ / dia</span>
+              </div>
+            </div>
+            <p id="my-pro-transport-tip" class="hidden text-[11px] text-[#58615b] bg-white p-2.5 rounded-xl border border-[#e2dcd0]">
+              <strong class="text-[#19201c]">Transportador de cavalos:</strong> Podes cobrar por <strong>km</strong> (ex: 1,50 €/km) ou por serviço/dia.
+            </p>
+          </div>
+        </div>
+
+        <!-- Descrição 200 caracteres -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label for="my-pro-bio" class="block text-xs font-bold text-[#19201c]">Pequena descrição (máx. 200 caracteres)</label>
+            <span id="my-pro-bio-count" class="text-[11px] font-bold text-[#58615b]">0 / 200 caracteres</span>
+          </div>
+          <textarea id="my-pro-bio" rows="3" maxlength="200" oninput="updateMyBioCounter()" placeholder="Apresenta brevemente a tua experiência e o que ofereces (máx. 200 caracteres)..." class="w-full px-3.5 py-2.5 bg-white border border-[#e2dcd0] rounded-xl text-xs text-[#19201c] focus:outline-none focus:border-[#173326]"></textarea>
+        </div>
+
+        <div class="flex justify-end">
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#173326] text-white text-xs font-bold hover:bg-[#0f2219] cursor-pointer">
+            Guardar Alterações do Perfil
+          </button>
+        </div>
+      </form>
 
       <div class="bg-white p-6 rounded-2xl border border-[#e2dcd0] space-y-3">
         <h3 class="font-serif-editorial font-bold text-lg text-[#19201c]">Pedidos de Contratação Recebidos</h3>
@@ -1553,6 +1667,16 @@
       const pro = STATE.professionals.find(p => p.id === proId);
       const modal = document.getElementById('booking-modal');
       const content = document.getElementById('modal-content');
+      const defaultQty = pro.unit === 'km' ? 100 : (pro.unit === 'cavalo' ? 2 : 3);
+      const unitQtyLabel = pro.unit === 'km'
+        ? 'Distância estimada (km)'
+        : pro.unit === 'hora'
+        ? 'Nº de Horas'
+        : pro.unit === 'serviço'
+        ? 'Nº de Serviços'
+        : 'Nº de Dias';
+      const initialSubtotal = Number((pro.dailyRate * defaultQty).toFixed(2));
+      const initialTotal = Number((initialSubtotal + 2).toFixed(2));
 
       content.innerHTML = `
         <div class="space-y-4">
@@ -1563,7 +1687,7 @@
                 <h3 class="font-serif-editorial font-bold text-xl text-[#19201c]">${pro.name}</h3>
                 <span class="text-[10px] bg-[#e8f0ec] text-[#173326] font-bold px-2 py-0.5 rounded-full">✓ Verificado</span>
               </div>
-              <p class="text-xs text-[#94522a] font-bold uppercase">${pro.category} • ${pro.dailyRate} €/${pro.unit}</p>
+              <p class="text-xs text-[#94522a] font-bold uppercase">${pro.category} • ${pro.dailyRate} €/${pro.unit} • ${pro.experience} anos exp.</p>
               <p class="text-xs text-[#58615b]">📍 ${pro.city} (${pro.region}) • Resp. ${pro.responseTime}</p>
             </div>
           </div>
@@ -1581,20 +1705,22 @@
               <input id="modal-loc" type="text" value="CSN Sociedade Hípica Portuguesa (Lisboa)" required class="w-full px-3.5 py-2.5 bg-white border border-[#dcd5c7] rounded-xl text-xs font-semibold text-[#19201c] focus:outline-none focus:border-[#173326] shadow-xs" />
             </div>
             <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-bold text-[#19201c] mb-1">Nº de Dias / Serviços</label>
-                <input id="modal-days" type="number" min="1" max="15" value="3" oninput="updateModalTotal(${pro.dailyRate})" class="w-full px-3.5 py-2.5 bg-white border border-[#dcd5c7] rounded-xl text-xs font-bold text-[#19201c] shadow-xs focus:outline-none focus:border-[#173326]" />
-              </div>
-              <div>
+              ${pro.unit !== 'cavalo' ? `
+                <div>
+                  <label class="block text-xs font-bold text-[#19201c] mb-1">${unitQtyLabel}</label>
+                  <input id="modal-days" type="number" min="1" max="${pro.unit === 'km' ? 3000 : 120}" value="${defaultQty}" oninput="updateModalTotal(${pro.dailyRate}, '${pro.unit}')" class="w-full px-3.5 py-2.5 bg-white border border-[#dcd5c7] rounded-xl text-xs font-bold text-[#19201c] shadow-xs focus:outline-none focus:border-[#173326]" />
+                </div>
+              ` : '<input id="modal-days" type="hidden" value="1" />'}
+              <div class="${pro.unit === 'cavalo' ? 'col-span-2' : ''}">
                 <label class="block text-xs font-bold text-[#19201c] mb-1">Nº de Cavalos</label>
-                <input id="modal-horses" type="number" min="1" max="15" value="2" class="w-full px-3.5 py-2.5 bg-white border border-[#dcd5c7] rounded-xl text-xs font-bold text-[#19201c] shadow-xs focus:outline-none focus:border-[#173326]" />
+                <input id="modal-horses" type="number" min="1" max="15" value="2" oninput="updateModalTotal(${pro.dailyRate}, '${pro.unit}')" class="w-full px-3.5 py-2.5 bg-white border border-[#dcd5c7] rounded-xl text-xs font-bold text-[#19201c] shadow-xs focus:outline-none focus:border-[#173326]" />
               </div>
             </div>
 
             <div class="p-3.5 bg-[#f8f6f1] rounded-xl border border-[#e2dcd0] space-y-1 text-xs">
               <div class="flex justify-between text-[#58615b]">
-                <span>Valor profissional (${pro.dailyRate} € × <span id="modal-days-label">3</span>)</span>
-                <span id="modal-subtotal">${pro.dailyRate * 3} €</span>
+                <span>Valor profissional (${pro.dailyRate} € × <span id="modal-days-label">${defaultQty}</span> ${pro.unit === 'km' ? 'km' : pro.unit + '(s)'})</span>
+                <span id="modal-subtotal">${initialSubtotal} €</span>
               </div>
               <div class="flex justify-between text-[#58615b]">
                 <span>Taxa fixa EquiFlow (proteção e reserva)</span>
@@ -1602,7 +1728,7 @@
               </div>
               <div class="flex justify-between items-center pt-1.5 border-t border-[#e2dcd0] font-bold text-sm text-[#19201c]">
                 <span>Total (Pagamento MB WAY após confirmação):</span>
-                <strong id="modal-total" class="text-[#173326]">${pro.dailyRate * 3 + 2} €</strong>
+                <strong id="modal-total" class="text-[#173326]">${initialTotal} €</strong>
               </div>
             </div>
 
@@ -1615,11 +1741,15 @@
       modal.classList.remove('hidden');
     }
 
-    function updateModalTotal(rate) {
-      const days = Math.max(1, Number(document.getElementById('modal-days').value) || 1);
-      document.getElementById('modal-days-label').textContent = days;
-      document.getElementById('modal-subtotal').textContent = `${rate * days} €`;
-      document.getElementById('modal-total').textContent = `${rate * days + 2} €`;
+    function updateModalTotal(rate, unit) {
+      const qty = unit === 'cavalo'
+        ? Math.max(1, Number(document.getElementById('modal-horses').value) || 1)
+        : Math.max(1, Number(document.getElementById('modal-days').value) || 1);
+      const subtotal = Number((rate * qty).toFixed(2));
+      const total = Number((subtotal + 2).toFixed(2));
+      document.getElementById('modal-days-label').textContent = qty;
+      document.getElementById('modal-subtotal').textContent = `${subtotal} €`;
+      document.getElementById('modal-total').textContent = `${total} €`;
     }
 
     function closeModal() {
@@ -1630,9 +1760,12 @@
       e.preventDefault();
       const pro = STATE.professionals.find(p => p.id === proId);
       const loc = document.getElementById('modal-loc').value;
-      const days = Math.max(1, Number(document.getElementById('modal-days').value) || 1);
       const horses = Math.max(1, Number(document.getElementById('modal-horses').value) || 1);
-      const total = pro.dailyRate * days + 2;
+      const qty = pro.unit === 'cavalo'
+        ? horses
+        : Math.max(1, Number(document.getElementById('modal-days').value) || 1);
+      const total = Number((pro.dailyRate * qty + 2).toFixed(2));
+      const unitLabel = pro.unit === 'km' ? 'km' : `${pro.unit}(s)`;
 
       const newBk = {
         id: 'bk-' + Date.now(),
@@ -1641,11 +1774,11 @@
         proAvatar: pro.avatar,
         category: pro.category,
         location: loc,
-        dates: `${days} dia(s) • ${horses} cavalo(s)`,
+        dates: `${qty} ${unitLabel} • ${horses} cavalo(s)`,
         total: total,
         status: 'Pedido',
         messages: [
-          { sender: 'user', text: `Olá ${pro.name.split(' ')[0]}! Enviei pedido de contratação para ${loc} (${days} dia(s), ${horses} cavalo(s)).`, time: 'Agora' }
+          { sender: 'user', text: `Olá ${pro.name.split(' ')[0]}! Enviei pedido de contratação para ${loc} (${qty} ${unitLabel}, ${horses} cavalo(s)).`, time: 'Agora' }
         ]
       };
       STATE.bookings.unshift(newBk);
@@ -1767,7 +1900,140 @@
       }
     }
 
+    let draftProAvatar = STATE.professionals[0].avatar;
+
+    function populateMyProForm() {
+      const me = STATE.professionals[0];
+      draftProAvatar = me.avatar;
+      document.getElementById('pro-area-avatar').src = me.avatar;
+      document.getElementById('pro-area-name').textContent = me.name;
+      document.getElementById('pro-area-meta').textContent = `${me.category} • ${me.region} • ${me.experience} anos exp.`;
+      document.getElementById('pro-area-stats').textContent = `Tarifa atual: ${me.dailyRate} € / ${me.unit} • ${me.jobsCount} trabalhos concluídos na EquiFlow • Avaliação média ${me.rating.toFixed(1)} ★`;
+
+      document.getElementById('my-pro-photo-preview').src = me.avatar;
+      document.getElementById('preset-img-1').src = IMAGES.groom1;
+      document.getElementById('preset-img-2').src = IMAGES.groom2;
+      document.getElementById('preset-img-3').src = IMAGES.groom3;
+      document.getElementById('preset-img-4').src = IMAGES.groom4;
+
+      document.getElementById('my-pro-name').value = me.name;
+      document.getElementById('my-pro-category').value = me.category;
+      document.getElementById('my-pro-exp').value = me.experience;
+      document.getElementById('my-pro-region').value = me.region;
+      document.getElementById('my-pro-city').value = me.city;
+      document.getElementById('my-pro-rate').value = me.dailyRate;
+      document.getElementById('my-pro-bio').value = (me.bio || '').slice(0, 200);
+      selectMyRateUnit(me.unit);
+      updateMyBioCounter();
+      document.getElementById('my-pro-transport-tip').classList.toggle('hidden', me.category !== 'Transporte');
+    }
+
+    function handleMyProPhotoUpload(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('Por favor seleciona um ficheiro de imagem válido.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          draftProAvatar = reader.result;
+          document.getElementById('my-pro-photo-preview').src = draftProAvatar;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function selectMyProAvatarPreset(key) {
+      if (IMAGES[key]) {
+        draftProAvatar = IMAGES[key];
+        document.getElementById('my-pro-photo-preview').src = draftProAvatar;
+      }
+    }
+
+    function handleMyProCategoryChange() {
+      const cat = document.getElementById('my-pro-category').value;
+      const isTransport = cat === 'Transporte';
+      document.getElementById('my-pro-transport-tip').classList.toggle('hidden', !isTransport);
+      if (isTransport) {
+        selectMyRateUnit('km');
+        const rateEl = document.getElementById('my-pro-rate');
+        if (Number(rateEl.value) >= 20) {
+          rateEl.value = 1.5;
+          updateRatePreview();
+        }
+      }
+    }
+
+    function selectMyRateUnit(unit) {
+      document.getElementById('my-pro-unit').value = unit;
+      const btns = document.querySelectorAll('#my-pro-unit-buttons button');
+      btns.forEach(b => {
+        const active = b.getAttribute('data-unit') === unit;
+        b.className = active
+          ? 'px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer bg-[#173326] text-white border-[#173326]'
+          : 'px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer bg-white text-[#58615b] border-[#e2dcd0] hover:border-[#173326]';
+      });
+      updateRatePreview();
+    }
+
+    function updateRatePreview() {
+      const val = document.getElementById('my-pro-rate').value || 0;
+      const unit = document.getElementById('my-pro-unit').value || 'dia';
+      document.getElementById('my-pro-rate-preview').textContent = `${val} € / ${unit}`;
+      document.getElementById('my-pro-rate-unit-label').textContent = `€ / ${unit}`;
+    }
+
+    function updateMyBioCounter() {
+      const bioEl = document.getElementById('my-pro-bio');
+      if (bioEl.value.length > 200) {
+        bioEl.value = bioEl.value.slice(0, 200);
+      }
+      const len = bioEl.value.length;
+      const counter = document.getElementById('my-pro-bio-count');
+      counter.textContent = `${len} / 200 caracteres`;
+      counter.className = len >= 180
+        ? 'text-[11px] font-bold text-[#94522a]'
+        : 'text-[11px] font-bold text-[#58615b]';
+    }
+
+    function saveMyProProfile(e) {
+      e.preventDefault();
+      const me = STATE.professionals[0];
+      const rateVal = Math.max(0.5, Number(document.getElementById('my-pro-rate').value) || 1);
+      const expVal = Math.max(0, Math.floor(Number(document.getElementById('my-pro-exp').value) || 0));
+
+      me.avatar = draftProAvatar || me.avatar;
+      me.name = document.getElementById('my-pro-name').value.trim() || me.name;
+      me.category = document.getElementById('my-pro-category').value;
+      me.experience = expVal;
+      me.region = document.getElementById('my-pro-region').value;
+      me.city = document.getElementById('my-pro-city').value.trim() || me.region;
+      me.unit = document.getElementById('my-pro-unit').value;
+      me.dailyRate = rateVal;
+      me.bio = document.getElementById('my-pro-bio').value.trim().slice(0, 200);
+
+      STATE.bookings.forEach(bk => {
+        if (bk.proId === me.id) {
+          bk.proName = me.name;
+          bk.proAvatar = me.avatar;
+          bk.category = me.category;
+        }
+      });
+
+      populateMyProForm();
+      renderProfessionals();
+      renderMap();
+
+      const badge = document.getElementById('pro-profile-saved-badge');
+      badge.classList.remove('hidden');
+      setTimeout(() => badge.classList.add('hidden'), 2500);
+      showToast('Perfil profissional atualizado com sucesso!');
+    }
+
     function renderProArea() {
+      populateMyProForm();
       const target = document.getElementById('pro-incoming-bookings');
       target.innerHTML = STATE.bookings.map(b => `
         <div class="p-4 rounded-xl bg-[#f8f6f1] border border-[#e2dcd0] flex flex-wrap items-center justify-between gap-3">
@@ -1807,24 +2073,18 @@
       STATE.professionals[0].availableNow = !isAvailable;
       if (isAvailable) {
         btn.textContent = '○ Agenda Pausada';
-        btn.className = 'px-4 py-2 rounded-xl bg-[#f0ece2] text-[#58615b] border border-[#e2dcd0] text-xs font-bold cursor-pointer';
+        btn.className = 'px-4 py-2.5 rounded-xl bg-[#f0ece2] text-[#58615b] border border-[#e2dcd0] text-xs font-bold cursor-pointer shrink-0';
         showToast('A tua disponibilidade foi pausada.');
       } else {
         btn.textContent = '● Disponível para Contratação';
-        btn.className = 'px-4 py-2 rounded-xl bg-[#e8f0ec] text-[#173326] border border-[#173326] text-xs font-bold cursor-pointer';
+        btn.className = 'px-4 py-2.5 rounded-xl bg-[#e8f0ec] text-[#173326] border border-[#173326] text-xs font-bold cursor-pointer shrink-0';
         showToast('Estás visível como disponível para novas contratações.');
       }
       renderProfessionals();
     }
 
-    function updateMyProRate() {
-      const val = Math.max(20, Number(document.getElementById('my-pro-rate').value) || 85);
-      STATE.professionals[0].dailyRate = val;
-      renderProfessionals();
-      showToast(`Tarifa diária atualizada para ${val} €/dia.`);
-    }
-
     // Initial render
+    populateMyProForm();
     renderProfessionals();
     renderRequestsAndCompetitions();
   </script>

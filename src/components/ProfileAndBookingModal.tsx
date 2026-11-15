@@ -27,14 +27,24 @@ export const ProfileAndBookingModal: React.FC<ProfileAndBookingModalProps> = ({
   const [mode, setMode] = useState<'profile' | 'book'>(initialMode);
   const [eventOrLocation, setEventOrLocation] = useState('CSN Sociedade Hípica Portuguesa (Lisboa)');
   const [startDate, setStartDate] = useState('2026-11-21');
-  const [days, setDays] = useState(2);
+  const [days, setDays] = useState(pro.rateUnit === 'km' ? 100 : 2);
   const [horsesCount, setHorsesCount] = useState(2);
   const [paymentMethod, setPaymentMethod] = useState<'MB WAY' | 'Transferência'>('MB WAY');
   const [notes, setNotes] = useState('');
 
+  const quantityForRate = pro.rateUnit === 'cavalo' ? horsesCount : days;
+  const unitLabel =
+    pro.rateUnit === 'km'
+      ? 'Distância estimada (km)'
+      : pro.rateUnit === 'hora'
+        ? 'Nº de horas'
+        : pro.rateUnit === 'serviço'
+          ? 'Nº de serviços'
+          : 'Nº de dias';
+
   const platformFee = 2;
-  const subtotal = pro.dailyRate * days;
-  const total = subtotal + platformFee;
+  const subtotal = Number((pro.dailyRate * quantityForRate).toFixed(2));
+  const total = Number((subtotal + platformFee).toFixed(2));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,19 +56,20 @@ export const ProfileAndBookingModal: React.FC<ProfileAndBookingModalProps> = ({
       professionalCategory: pro.category,
       eventOrLocation,
       startDate,
-      days,
+      days: quantityForRate,
       horsesCount,
       dailyRate: pro.dailyRate,
+      rateUnit: pro.rateUnit,
       platformFee,
       total,
       status: 'Pedido',
       paymentMethod,
-      notes: notes || `${horsesCount} cavalo(s) • ${days} dia(s)`,
+      notes: notes || `${horsesCount} cavalo(s) • ${quantityForRate} ${pro.rateUnit}(s)`,
       messages: [
         {
           id: `msg-${Date.now()}`,
           sender: 'user',
-          text: `Olá ${pro.name.split(' ')[0]}, enviei um pedido de reserva para ${eventOrLocation} (${days} dia(s), ${horsesCount} cavalo(s)).`,
+          text: `Olá ${pro.name.split(' ')[0]}, enviei um pedido de reserva para ${eventOrLocation} (${quantityForRate} ${pro.rateUnit}(s), ${horsesCount} cavalo(s)).`,
           time: new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }),
         },
       ],
@@ -282,19 +293,21 @@ export const ProfileAndBookingModal: React.FC<ProfileAndBookingModalProps> = ({
                     className="w-full px-3 py-2 rounded-lg border border-[#e5dfd3] text-sm focus:outline-none focus:border-[#1c3a2d]"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-[#1e2420] mb-1">
-                    Nº de dias / serviços
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={30}
-                    value={days}
-                    onChange={(e) => setDays(Math.max(1, Number(e.target.value)))}
-                    className="w-full px-3 py-2 rounded-lg border border-[#e5dfd3] text-sm focus:outline-none focus:border-[#1c3a2d]"
-                  />
-                </div>
+                {pro.rateUnit !== 'cavalo' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-[#1e2420] mb-1">
+                      {unitLabel}
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={pro.rateUnit === 'km' ? 3000 : 120}
+                      value={days}
+                      onChange={(e) => setDays(Math.max(1, Number(e.target.value)))}
+                      className="w-full px-3 py-2 rounded-lg border border-[#e5dfd3] text-sm focus:outline-none focus:border-[#1c3a2d]"
+                    />
+                  </div>
+                )}
                 <div>
                   <label className="block text-xs font-semibold text-[#1e2420] mb-1">
                     Nº de cavalos
@@ -350,7 +363,7 @@ export const ProfileAndBookingModal: React.FC<ProfileAndBookingModalProps> = ({
               <div className="bg-[#f9f7f2] p-4 rounded-xl border border-[#e5dfd3] space-y-1.5 text-sm">
                 <div className="flex justify-between text-[#5c645e]">
                   <span>
-                    {pro.dailyRate} € × {days} {pro.rateUnit}(s)
+                    {pro.dailyRate} € × {quantityForRate} {pro.rateUnit === 'km' ? 'km' : `${pro.rateUnit}(s)`}
                   </span>
                   <span>{subtotal} €</span>
                 </div>

@@ -12,6 +12,8 @@ export type Region =
   | 'Porto & Norte'
   | 'Alentejo';
 
+export type RateUnit = 'hora' | 'dia' | 'cavalo' | 'serviço' | 'km';
+
 export interface Review {
   id: string;
   author: string;
@@ -31,7 +33,7 @@ export interface Professional {
   coordinates: { x: number; y: number }; // % positions on the Portugal map view
   avatar: string;
   dailyRate: number;
-  rateUnit: 'dia' | 'serviço';
+  rateUnit: RateUnit;
   experienceYears: number;
   verifiedIdentity: boolean;
   verifiedExperience: boolean;
@@ -48,6 +50,19 @@ export interface Professional {
   availabilityDays: { day: string; label: string; available: boolean }[];
   reviews: Review[];
 }
+
+export type ProfessionalProfileUpdate = Pick<
+  Professional,
+  | 'name'
+  | 'category'
+  | 'avatar'
+  | 'dailyRate'
+  | 'rateUnit'
+  | 'region'
+  | 'city'
+  | 'experienceYears'
+  | 'bio'
+>;
 
 export interface Competition {
   id: string;
@@ -95,6 +110,7 @@ export interface Booking {
   days: number;
   horsesCount: number;
   dailyRate: number;
+  rateUnit?: RateUnit;
   platformFee: number;
   total: number;
   status: BookingStatus;

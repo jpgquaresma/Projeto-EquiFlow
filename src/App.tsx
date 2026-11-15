@@ -20,6 +20,7 @@ import type {
   BookingStatus,
   OpenRequest,
   Professional,
+  ProfessionalProfileUpdate,
   Region,
   ServiceCategory,
 } from './types/equiflow';
@@ -234,11 +235,23 @@ export function App() {
     showToast('Disponibilidade atualizada na plataforma.');
   };
 
-  const handleUpdateProRate = (proId: string, rate: number) => {
+  const handleUpdateProProfile = (proId: string, updates: ProfessionalProfileUpdate) => {
     setProfessionals((prev) =>
-      prev.map((p) => (p.id === proId ? { ...p, dailyRate: rate } : p))
+      prev.map((p) => (p.id === proId ? { ...p, ...updates } : p))
     );
-    showToast('Tarifa atualizada com sucesso.');
+    setBookings((prev) =>
+      prev.map((bk) =>
+        bk.professionalId === proId
+          ? {
+              ...bk,
+              professionalName: updates.name,
+              professionalAvatar: updates.avatar,
+              professionalCategory: updates.category,
+            }
+          : bk
+      )
+    );
+    showToast('Perfil profissional atualizado com sucesso.');
   };
 
   return (
@@ -507,7 +520,7 @@ export function App() {
             professional={professionals[0]}
             bookings={bookings.filter((b) => b.professionalId === professionals[0].id)}
             onToggleAvailability={handleToggleProAvailability}
-            onUpdateRate={handleUpdateProRate}
+            onUpdateProfile={handleUpdateProProfile}
             onUpdateBookingStatus={handleUpdateBookingStatus}
           />
         )}
