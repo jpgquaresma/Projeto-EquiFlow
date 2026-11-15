@@ -6,9 +6,10 @@ import {
   MessageSquare,
   Briefcase,
   AlertCircle,
+  Sparkles,
 } from 'lucide-react';
 
-export type ActiveTab = 'discover' | 'requests' | 'compare' | 'bookings' | 'pro-area';
+export type ActiveTab = 'discover' | 'requests' | 'compare' | 'bookings' | 'pro-area' | 'landing';
 
 interface NavbarProps {
   activeTab: ActiveTab;
@@ -26,6 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onEmergencyClick,
 }) => {
   const navItems: { id: ActiveTab; label: string; icon: React.ReactNode; badge?: number }[] = [
+    { id: 'landing', label: 'Lista de Espera', icon: <Sparkles className="w-4 h-4" /> },
     { id: 'discover', label: 'Encontrar', icon: <Search className="w-4 h-4" /> },
     { id: 'requests', label: 'Pedidos & Concursos', icon: <CalendarDays className="w-4 h-4" /> },
     {

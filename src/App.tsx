@@ -31,6 +31,7 @@ import { CompareView } from './components/CompareView';
 import { RequestsAndCompetitionsView } from './components/RequestsAndCompetitionsView';
 import { BookingsAndChatView } from './components/BookingsAndChatView';
 import { ProfessionalAreaView } from './components/ProfessionalAreaView';
+import { LandingPageView } from './components/LandingPageView';
 
 const CATEGORIES: ('Todas' | ServiceCategory)[] = [
   'Todas',
@@ -509,6 +510,10 @@ export function App() {
             onUpdateRate={handleUpdateProRate}
             onUpdateBookingStatus={handleUpdateBookingStatus}
           />
+        )}
+
+        {activeTab === 'landing' && (
+          <LandingPageView onExploreMvp={() => setActiveTab('discover')} />
         )}
       </main>
 
