@@ -438,7 +438,7 @@
       color: var(--saddle);
     }
 
-    .piquete-tag {
+    .urgent-pill {
       font-size: 10px;
       font-weight: 700;
       padding: 2px 7px;
@@ -1324,7 +1324,7 @@
 
         <div class="preview-body">
           <div id="urgent-banner" class="urgent-banner hidden">
-            <span>⚠ Piquete de Urgência 24h ativo — apoio imediato a qualquer momento</span>
+            <span>⚠ Modo Urgência 24h ativo — apoio veterinário imediato a qualquer momento</span>
             <strong>&lt; 15 min</strong>
           </div>
           <div id="preview-cards" style="display: flex; flex-direction: column; gap: 10px;"></div>
@@ -1385,7 +1385,7 @@
         <div class="spec-card">
           <div class="spec-top"><span class="spec-num">03</span><span class="spec-tag">Cédula OMV</span></div>
           <h3>Veterinários Equinos</h3>
-          <p>Profissionais com cédula OMV validada para acompanhamento clínico e piquete de emergência.</p>
+          <p>Profissionais com cédula OMV validada para acompanhamento clínico e apoio de emergência 24h.</p>
         </div>
         <div class="spec-card">
           <div class="spec-top"><span class="spec-num">04</span><span class="spec-tag">Licença DGAV</span></div>
@@ -1771,7 +1771,7 @@
         </details>
         <details>
           <summary>Como funciona em situações de urgência veterinária a qualquer momento?</summary>
-          <p>A plataforma dispõe do modo Urgência 24h que destaca veterinários com piquete ativo e unidade móvel na região, permitindo pedir apoio imediato a qualquer momento (cólicas, feridas ou imprevistos em concurso e estábulo).</p>
+          <p>A plataforma dispõe do modo Urgência 24h que destaca veterinários com disponibilidade imediata e unidade móvel na região, permitindo pedir apoio imediato a qualquer momento (cólicas, feridas ou imprevistos em concurso e estábulo).</p>
         </details>
         <details>
           <summary>Qual é a vantagem de entrar já na lista de espera?</summary>
@@ -1852,7 +1852,7 @@
         basePros: 7,
         circuits: 'Vilamoura Atlantic Tour • Vale do Lobo • Quarteira • Portimão',
         focus: 'Circuitos Internacionais CSI & Temporadas de Inverno',
-        demand: 'Equipas internacionais a contratar Grooms e Piquete 24h'
+        demand: 'Equipas internacionais a contratar Grooms e Apoio 24h'
       }
     };
 
@@ -1902,7 +1902,7 @@
         docs: [
           'Número ativo da Cédula da Ordem dos Médicos Veterinários (OMV)',
           'Verificação de identidade e clínica/equipa móvel associada',
-          'Disponibilidade declarada para piquete de urgência 24h em provas'
+          'Disponibilidade declarada para urgência 24h a qualquer momento'
         ],
         rule: 'Nenhum médico veterinário é publicado sem confirmação direta do número de cédula OMV.'
       },
@@ -1969,7 +1969,7 @@
               <div class="pro-name-line">
                 <span class="pro-name">${item.name}</span>
                 ${item.vip ? '<span class="vip-tag">VIP</span>' : ''}
-                ${item.urgentReady ? '<span class="piquete-tag">Piquete Rápido</span>' : ''}
+                ${item.urgentReady ? '<span class="urgent-pill">Resposta Rápida 24h</span>' : ''}
               </div>
               <div class="pro-role">${item.role}</div>
               <div class="pro-meta">

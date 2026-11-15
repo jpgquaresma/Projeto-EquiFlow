@@ -208,7 +208,7 @@ const REGION_HUBS: Record<
     basePros: 7,
     circuits: 'Vilamoura Atlantic Tour • Vale do Lobo • Quarteira • Portimão',
     focus: 'Circuitos Internacionais CSI & Temporadas de Inverno',
-    demand: 'Equipas internacionais a contratar Grooms e Piquete 24h',
+    demand: 'Equipas internacionais a contratar Grooms e Apoio 24h',
   },
 };
 
@@ -248,7 +248,7 @@ const VERIFICATION_SPECS: Record<
     docs: [
       'Número ativo da Cédula da Ordem dos Médicos Veterinários (OMV)',
       'Verificação de identidade e clínica/equipa móvel associada',
-      'Disponibilidade declarada para piquete de urgência 24h em provas',
+      'Disponibilidade declarada para urgência 24h a qualquer momento',
     ],
     rule: 'Nenhum médico veterinário é publicado sem confirmação direta do número de cédula OMV.',
   },
@@ -280,7 +280,7 @@ const SPECIALTIES = [
     num: '03',
     tag: 'Cédula OMV',
     title: 'Veterinários Equinos',
-    desc: 'Profissionais com cédula OMV validada para acompanhamento clínico e piquete de emergência.',
+    desc: 'Profissionais com cédula OMV validada para acompanhamento clínico e apoio de emergência 24h.',
   },
   {
     num: '04',
@@ -347,7 +347,7 @@ const FAQS = [
   },
   {
     q: 'Como funciona em situações de urgência veterinária a qualquer momento?',
-    a: 'A plataforma dispõe do modo Urgência 24h que destaca veterinários com piquete ativo e unidade móvel na região, permitindo pedir apoio imediato a qualquer momento (cólicas, feridas ou imprevistos em concurso e estábulo).',
+    a: 'A plataforma dispõe do modo Urgência 24h que destaca veterinários com disponibilidade imediata e unidade móvel na região, permitindo pedir apoio imediato a qualquer momento (cólicas, feridas ou imprevistos em concurso e estábulo).',
   },
   {
     q: 'Qual é a vantagem de entrar já na lista de espera?',
@@ -623,7 +623,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                   <div className="rounded-xl bg-[#fbf3ee] border border-[#e7cbb8] px-3.5 py-2.5 flex items-center justify-between text-xs text-[#7c4220] font-medium">
                     <span className="inline-flex items-center gap-1.5">
                       <AlertTriangle className="w-3.5 h-3.5" />
-                      Piquete de Urgência 24h ativo — apoio imediato a qualquer momento
+                      Modo Urgência 24h ativo — apoio veterinário imediato a qualquer momento
                     </span>
                     <span className="font-bold">&lt; 15 min</span>
                   </div>
@@ -659,7 +659,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                           )}
                           {item.urgentReady && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#edf3f0] text-[10px] font-bold text-[#142e22]">
-                              Piquete Rápido
+                              Resposta Rápida 24h
                             </span>
                           )}
                         </div>

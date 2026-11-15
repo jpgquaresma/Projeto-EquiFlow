@@ -442,7 +442,7 @@ export function App() {
                       </span>
                     </div>
                     <p className="text-xs text-[#5c645e] mt-0.5">
-                      A filtrar médicos veterinários com piquete ativo e unidade móvel (cólicas, suturas, imprevistos a qualquer hora).
+                      A filtrar médicos veterinários com disponibilidade imediata e unidade móvel (cólicas, suturas, imprevistos a qualquer hora).
                     </p>
                   </div>
                 </div>
