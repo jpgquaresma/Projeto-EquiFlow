@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -15,6 +15,8 @@ import {
   XCircle,
   Check,
   Sparkles,
+  FileCheck2,
+  AlertTriangle,
 } from 'lucide-react';
 
 interface LandingPageViewProps {
@@ -23,6 +25,12 @@ interface LandingPageViewProps {
 
 type LeadRole = 'cavaleiro' | 'profissional';
 type PreviewCategory = 'Grooms' | 'Ferradores' | 'Veterinários' | 'Transporte';
+type RegionKey =
+  | 'Porto & Norte'
+  | 'Ribatejo / Golegã'
+  | 'Lisboa & Tejo'
+  | 'Alentejo'
+  | 'Algarve / Vilamoura';
 
 interface ValidationLead {
   id: string;
@@ -48,8 +56,8 @@ const PREVIEW_DATA: Record<
     region: string;
     badge: string;
     rate: string;
-    availability: string;
     response: string;
+    urgentReady: boolean;
     isVip: boolean;
   }[]
 > = {
@@ -61,8 +69,8 @@ const PREVIEW_DATA: Record<
       region: 'Ribatejo • Golegã & Lisboa',
       badge: 'Identidade & Referências Verificadas',
       rate: '€95 / dia',
-      availability: 'Disponível este fim de semana',
-      response: '< 15 min',
+      response: '< 10 min',
+      urgentReady: true,
       isVip: true,
     },
     {
@@ -72,8 +80,8 @@ const PREVIEW_DATA: Record<
       region: 'Algarve • Vilamoura',
       badge: 'Identidade Verificada',
       rate: '€80 / dia',
-      availability: 'Vagas para circuito CSN',
       response: '< 30 min',
+      urgentReady: false,
       isVip: false,
     },
   ],
@@ -85,8 +93,8 @@ const PREVIEW_DATA: Record<
       region: 'Lisboa & Tejo • Cascais',
       badge: 'Certificação & Seguro Validados',
       rate: '€90 / serviço',
-      availability: 'Piquete de prova ativo',
-      response: '< 20 min',
+      response: '< 12 min',
+      urgentReady: true,
       isVip: true,
     },
     {
@@ -96,8 +104,8 @@ const PREVIEW_DATA: Record<
       region: 'Porto & Norte',
       badge: 'Identidade Verificada',
       rate: '€75 / serviço',
-      availability: 'Agenda aberta esta semana',
       response: '< 45 min',
+      urgentReady: false,
       isVip: false,
     },
   ],
@@ -109,8 +117,8 @@ const PREVIEW_DATA: Record<
       region: 'Algarve • Vilamoura & Alentejo',
       badge: 'Cédula OMV Verificada',
       rate: '€120 / chamada',
-      availability: 'Em prevenção de concurso',
-      response: '< 10 min',
+      response: '< 8 min',
+      urgentReady: true,
       isVip: true,
     },
     {
@@ -120,8 +128,8 @@ const PREVIEW_DATA: Record<
       region: 'Ribatejo / Golegã',
       badge: 'Cédula OMV Verificada',
       rate: '€100 / consulta',
-      availability: 'Consultas na região',
       response: '< 25 min',
+      urgentReady: false,
       isVip: false,
     },
   ],
@@ -133,8 +141,8 @@ const PREVIEW_DATA: Record<
       region: 'Portugal Continental & Espanha',
       badge: 'Licença DGAV Verificada',
       rate: '€1,25 / km',
-      availability: 'Saída imediata disponível',
-      response: '< 20 min',
+      response: '< 15 min',
+      urgentReady: true,
       isVip: true,
     },
     {
@@ -144,11 +152,104 @@ const PREVIEW_DATA: Record<
       region: 'Lisboa • Santarém • Porto',
       badge: 'Licença DGAV Verificada',
       rate: '€1,10 / km',
-      availability: 'Livre sexta a domingo',
       response: '< 35 min',
+      urgentReady: false,
       isVip: false,
     },
   ],
+};
+
+const REGION_HUBS: Record<
+  RegionKey,
+  {
+    circuits: string;
+    focus: string;
+    demand: string;
+    cx: number;
+    cy: number;
+  }
+> = {
+  'Porto & Norte': {
+    circuits: 'Esposende • Matosinhos • Braga • Ponte de Lima',
+    focus: 'Saltos de Obstáculos, Centros Hípicos & Transporte Regional',
+    demand: 'Alta procura por Grooms e Ferradores ao fim de semana',
+    cx: 96,
+    cy: 64,
+  },
+  'Ribatejo / Golegã': {
+    circuits: 'Golegã • Santarém • Abrantes • Coruche',
+    focus: 'Dressage, Lusitano, Feira Nacional do Cavalo & Coudelarias',
+    demand: 'Procura intensa de Tratadores, Ferradores e Clínica Equina',
+    cx: 86,
+    cy: 158,
+  },
+  'Lisboa & Tejo': {
+    circuits: 'Cascais • Beloura • Sociedade Hípica Portuguesa • Mafra',
+    focus: 'CSN/CSI, Estabulagem Premium & Apoio Diário',
+    demand: 'Urgência em prova e substituição rápida de Grooms',
+    cx: 56,
+    cy: 202,
+  },
+  Alentejo: {
+    circuits: 'Évora • Alter do Chão • Elvas • Comporta',
+    focus: 'Coudelarias, Criação, Endurance & Transporte Longo Curso',
+    demand: 'Necessidade contínua de Veterinários, Ferradores e Transporte DGAV',
+    cx: 120,
+    cy: 224,
+  },
+  'Algarve / Vilamoura': {
+    circuits: 'Vilamoura Atlantic Tour • Vale do Lobo • Portimão',
+    focus: 'Circuitos Internacionais CSI & Temporadas de Inverno',
+    demand: 'Equipas internacionais a contratar Grooms e Piquete 24h',
+    cx: 102,
+    cy: 306,
+  },
+};
+
+const VERIFICATION_SPECS: Record<
+  PreviewCategory,
+  {
+    subtitle: string;
+    docs: string[];
+    rule: string;
+  }
+> = {
+  Grooms: {
+    subtitle: 'Validação de Identidade e Experiência Prática',
+    docs: [
+      'Cartão de Cidadão ou Título de Residência válido',
+      'NIF / Enquadramento fiscal para emissão de recibos',
+      'Comprovação de experiência em estábulo ou concursos CSN/CSI',
+    ],
+    rule: 'Perfis de tratadores só ficam visíveis após validação completa de identidade.',
+  },
+  Ferradores: {
+    subtitle: 'Qualificação Técnica e Responsabilidade',
+    docs: [
+      'Identificação civil e fiscal verificadas (CC + NIF)',
+      'Certificação profissional / Portefólio de ferração desportiva',
+      'Seguro de responsabilidade civil e área geográfica de deslocação',
+    ],
+    rule: 'Garante segurança para cavalos de competição e transparência nos deslocamentos.',
+  },
+  Veterinários: {
+    subtitle: 'Conformidade Clínica Obrigatória',
+    docs: [
+      'Número ativo da Cédula da Ordem dos Médicos Veterinários (OMV)',
+      'Verificação de identidade e clínica/equipa móvel associada',
+      'Disponibilidade declarada para piquete de urgência 24h em provas',
+    ],
+    rule: 'Nenhum médico veterinário é publicado sem confirmação direta do número de cédula OMV.',
+  },
+  Transporte: {
+    subtitle: 'Licenciamento Oficial de Bem-Estar Animal',
+    docs: [
+      'Autorização/Licença DGAV ativa para transporte de equídeos vivos',
+      'Certificado de aptidão do condutor e inspeção da viatura/reboque',
+      'Seguro de carga viva e cobertura nacional ou transfronteiriça',
+    ],
+    rule: 'Impede anúncios clandestinos sem licença DGAV e protege o bem-estar do cavalo.',
+  },
 };
 
 const SPECIALTIES = [
@@ -245,6 +346,9 @@ const FAQS = [
 
 export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }) => {
   const [previewCategory, setPreviewCategory] = useState<PreviewCategory>('Grooms');
+  const [urgentPreview, setUrgentPreview] = useState(false);
+  const [activeRegionHub, setActiveRegionHub] = useState<RegionKey>('Ribatejo / Golegã');
+  const [verificationTab, setVerificationTab] = useState<PreviewCategory>('Veterinários');
   const [role, setRole] = useState<LeadRole>('cavaleiro');
   const [howItWorksTab, setHowItWorksTab] = useState<LeadRole>('cavaleiro');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -258,6 +362,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
   const [interestedInVip, setInterestedInVip] = useState(true);
   const [notes, setNotes] = useState('');
   const [submittedLead, setSubmittedLead] = useState<ValidationLead | null>(null);
+  const [regionNotice, setRegionNotice] = useState<string | null>(null);
   const [leads, setLeads] = useState<ValidationLead[]>(() => {
     try {
       const saved = localStorage.getItem('equiflow_validation_leads');
@@ -276,6 +381,15 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
   const toggleItem = (list: string[], setList: (v: string[]) => void, item: string) => {
     setList(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
   };
+
+  const formProgress = useMemo(() => {
+    let score = 35; // role + region/frequency default
+    if (selectedCategories.length > 0) score += 15;
+    if (name.trim().length > 1) score += 18;
+    if (whatsapp.trim().length > 5) score += 16;
+    if (email.includes('@')) score += 16;
+    return Math.min(100, score);
+  }, [selectedCategories.length, name, whatsapp, email]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -320,27 +434,60 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
     document.getElementById('validation-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const previewItems = PREVIEW_DATA[previewCategory];
+  const handleSelectRegionFromMap = (hub: RegionKey) => {
+    setRegion(hub);
+    setRegionNotice(`Região "${hub}" selecionada no formulário abaixo.`);
+    scrollToForm();
+    setTimeout(() => setRegionNotice(null), 4000);
+  };
+
+  const rawPreviewItems = PREVIEW_DATA[previewCategory];
+  const previewItems = urgentPreview
+    ? rawPreviewItems.filter((item) => item.urgentReady)
+    : rawPreviewItems;
+  const activeHubInfo = REGION_HUBS[activeRegionHub];
+  const activeVerif = VERIFICATION_SPECS[verificationTab];
 
   return (
-    <div className="font-sans space-y-20 pb-16 text-[#161d19]">
-      {/* Architectural Split Hero (No images, interactive platform preview) */}
+    <div className="font-sans space-y-24 pb-16 text-[#161d19]">
+      {/* Architectural Split Hero */}
       <section className="pt-4 lg:pt-8">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Left Copy */}
           <div className="lg:col-span-6 space-y-6">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#94522a]">
-              Portugal Continental • Acesso Antecipado
-            </p>
+            <div className="flex items-center gap-2.5">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#94522a"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M6 15V9a6 6 0 1 1 12 0v6" />
+                <path d="M4 15h16" />
+                <path d="M7 15v3a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-3" />
+              </svg>
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#94522a]">
+                Portugal Continental • Acesso Antecipado
+              </span>
+            </div>
 
-            <h1 className="!font-sans text-4xl sm:text-5xl lg:text-[3.35rem] font-extrabold tracking-[-0.035em] leading-[1.06] text-[#142019]">
+            <h1 className="!font-sans text-4xl sm:text-5xl lg:text-[3.35rem] font-extrabold tracking-[-0.038em] leading-[1.05] text-[#121c16]">
               Contratação equestre com verificação, rapidez e zero improviso.
             </h1>
 
             <p className="text-base sm:text-lg text-[#4c5650] leading-relaxed max-w-xl">
               Deixe para trás os grupos de WhatsApp na véspera de cada concurso. O{' '}
               <strong className="font-semibold text-[#161d19]">EquiFlow</strong> liga cavaleiros e
-              coudelarias a <strong className="font-semibold text-[#161d19]">Grooms, Ferradores, Veterinários OMV e Transporte DGAV</strong> em todo o país.
+              coudelarias a{' '}
+              <strong className="font-semibold text-[#161d19]">
+                Grooms, Ferradores, Veterinários OMV e Transporte DGAV
+              </strong>{' '}
+              em todo o país.
             </p>
 
             <div className="flex flex-wrap items-center gap-3.5 pt-1">
@@ -362,18 +509,21 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
               </button>
             </div>
 
-            {/* Clean Typographic Proof Strip */}
             <div className="grid grid-cols-3 gap-6 pt-6 border-t border-[#e5dfd3] max-w-lg">
               <div>
-                <div className="text-2xl font-bold tracking-tight text-[#142e22]">100%</div>
+                <div className="text-2xl font-extrabold tracking-tight text-[#142e22] tabular-nums">
+                  100%
+                </div>
                 <div className="text-xs text-[#5c6660] mt-0.5">Validação documental</div>
               </div>
               <div>
-                <div className="text-2xl font-bold tracking-tight text-[#94522a]">2 min</div>
+                <div className="text-2xl font-extrabold tracking-tight text-[#94522a] tabular-nums">
+                  2 min
+                </div>
                 <div className="text-xs text-[#5c6660] mt-0.5">Registo online direto</div>
               </div>
               <div>
-                <div className="text-2xl font-bold tracking-tight text-[#142e22]">
+                <div className="text-2xl font-extrabold tracking-tight text-[#142e22] tabular-nums">
                   {142 + leads.length}+
                 </div>
                 <div className="text-xs text-[#5c6660] mt-0.5">Inscritos na lista</div>
@@ -381,21 +531,30 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
             </div>
           </div>
 
-          {/* Right Interactive UI Showcase (Zero photos) */}
+          {/* Right Interactive UI Showcase with Urgent Toggle */}
           <div className="lg:col-span-6">
             <div className="rounded-3xl bg-white border border-[#e2dcd0] shadow-[0_24px_60px_-15px_rgba(20,46,34,0.12)] overflow-hidden">
-              {/* Top Window Bar */}
-              <div className="px-5 py-3.5 bg-[#f7f5f0] border-b border-[#e7e2d8] flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#161d19]">
+              <div className="px-5 py-3.5 bg-[#f7f5f0] border-b border-[#e7e2d8] flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#161d19]">
                   <ShieldCheck className="w-4 h-4 text-[#142e22]" />
                   <span>Pré-visualização da Rede Verificada</span>
                 </div>
-                <span className="text-[11px] font-medium text-[#5c6660]">
-                  Lisboa • Golegã • Vilamoura • Norte
-                </span>
+
+                {/* Live Urgency Toggle */}
+                <button
+                  type="button"
+                  onClick={() => setUrgentPreview(!urgentPreview)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer border ${
+                    urgentPreview
+                      ? 'bg-[#94522a] text-white border-[#94522a]'
+                      : 'bg-white text-[#525c56] border-[#d8d0c3] hover:border-[#94522a]/50'
+                  }`}
+                >
+                  <Zap className="w-3 h-3" />
+                  Urgência em Prova: {urgentPreview ? 'Ativo' : 'Simular'}
+                </button>
               </div>
 
-              {/* Category Switcher Tabs */}
               <div className="px-5 pt-4 pb-3 border-b border-[#f0ece3] flex flex-wrap gap-1.5">
                 {(['Grooms', 'Ferradores', 'Veterinários', 'Transporte'] as PreviewCategory[]).map(
                   (cat) => {
@@ -418,12 +577,25 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                 )}
               </div>
 
-              {/* Dynamic Preview Cards */}
               <div className="p-5 space-y-3 bg-[#fcfbf8]">
+                {urgentPreview && (
+                  <div className="rounded-xl bg-[#fbf3ee] border border-[#e7cbb8] px-3.5 py-2.5 flex items-center justify-between text-xs text-[#7c4220] font-medium">
+                    <span className="inline-flex items-center gap-1.5">
+                      <AlertTriangle className="w-3.5 h-3.5" />
+                      Modo Piquete CSN/CSI ativo — a mostrar resposta imediata
+                    </span>
+                    <span className="font-bold">&lt; 15 min</span>
+                  </div>
+                )}
+
                 {previewItems.map((item) => (
                   <div
                     key={item.name}
-                    className="rounded-2xl bg-white border border-[#e6e0d5] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-[#c8bfae]"
+                    className={`rounded-2xl bg-white border p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${
+                      urgentPreview && item.urgentReady
+                        ? 'border-[#d8a482] shadow-xs'
+                        : 'border-[#e6e0d5] hover:border-[#c8bfae]'
+                    }`}
                   >
                     <div className="flex items-start gap-3.5">
                       <div
@@ -444,6 +616,11 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                               VIP
                             </span>
                           )}
+                          {item.urgentReady && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#edf3f0] text-[10px] font-bold text-[#142e22]">
+                              Piquete Rápido
+                            </span>
+                          )}
                         </div>
                         <div className="text-xs font-medium text-[#4c5650]">{item.title}</div>
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[#6d7670]">
@@ -461,23 +638,22 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
 
                     <div className="sm:text-right flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-3 sm:pt-0 border-[#f0ece3]">
                       <div className="font-bold text-sm text-[#161d19] tabular-nums">{item.rate}</div>
-                      <div className="text-[11px] text-[#142e22] font-medium">
+                      <div className="text-[11px] text-[#142e22] font-semibold">
                         Resposta {item.response}
                       </div>
                     </div>
                   </div>
                 ))}
 
-                {/* Bottom Action Strip */}
                 <div className="pt-2 flex items-center justify-between text-xs text-[#5c6660]">
                   <span className="inline-flex items-center gap-1.5">
-                    <Zap className="w-3.5 h-3.5 text-[#94522a]" />
-                    Filtro de Urgência em Prova CSN/CSI incluído
+                    <MapPin className="w-3.5 h-3.5 text-[#142e22]" />
+                    Portugal Continental • 5 Zonas Ativas
                   </span>
                   <button
                     type="button"
                     onClick={scrollToForm}
-                    className="font-semibold text-[#142e22] hover:underline cursor-pointer"
+                    className="font-bold text-[#142e22] hover:underline cursor-pointer"
                   >
                     Reservar vaga →
                   </button>
@@ -557,7 +733,7 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
           {SPECIALTIES.map((sp) => (
             <div
               key={sp.num}
-              className="rounded-2xl bg-white border border-[#e6e0d5] p-6 space-y-4 hover:border-[#bfb5a3] transition-colors"
+              className="rounded-2xl bg-white border border-[#e6e0d5] p-6 space-y-4 hover:border-[#bfb5a3] hover:-translate-y-0.5 transition-all"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold tracking-widest text-[#94522a]">{sp.num}</span>
@@ -574,7 +750,193 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
         </div>
       </section>
 
-      {/* How It Works & Verification */}
+      {/* Interactive Portugal Regional Coverage & Circuits */}
+      <section className="rounded-3xl bg-white border border-[#e6e0d5] p-6 sm:p-10 shadow-xs">
+        <div className="grid lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-5 flex flex-col items-center justify-center rounded-2xl bg-[#f7f5f0] border border-[#e6e0d5] p-6">
+            <div className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#525c56] mb-3">
+              Clique numa zona de Portugal Continental
+            </div>
+            {/* Minimalist Geometric Network SVG for Portugal Hubs */}
+            <svg viewBox="0 0 210 350" className="w-48 sm:w-52 h-auto" aria-label="Mapa de cobertura regional EquiFlow">
+              {/* Stylized Portugal Continental Silhouette */}
+              <path
+                d="M78,24 L132,20 L152,48 L146,96 L154,140 L142,186 L156,232 L144,274 L134,316 L98,324 L66,312 L72,272 L50,224 L42,188 L56,144 L62,92 Z"
+                fill="#ebe6da"
+                stroke="#d3cab9"
+                strokeWidth="2"
+              />
+              {/* Connections */}
+              <line x1="96" y1="64" x2="86" y2="158" stroke="#c5baa6" strokeWidth="1.5" strokeDasharray="3 3" />
+              <line x1="86" y1="158" x2="56" y2="202" stroke="#c5baa6" strokeWidth="1.5" strokeDasharray="3 3" />
+              <line x1="86" y1="158" x2="120" y2="224" stroke="#c5baa6" strokeWidth="1.5" strokeDasharray="3 3" />
+              <line x1="120" y1="224" x2="102" y2="306" stroke="#c5baa6" strokeWidth="1.5" strokeDasharray="3 3" />
+
+              {(Object.keys(REGION_HUBS) as RegionKey[]).map((key) => {
+                const hub = REGION_HUBS[key];
+                const isSelected = activeRegionHub === key;
+                return (
+                  <g
+                    key={key}
+                    onClick={() => setActiveRegionHub(key)}
+                    className="cursor-pointer"
+                  >
+                    {isSelected && (
+                      <circle cx={hub.cx} cy={hub.cy} r="18" fill="#142e22" opacity="0.14" />
+                    )}
+                    <circle
+                      cx={hub.cx}
+                      cy={hub.cy}
+                      r={isSelected ? '8.5' : '6'}
+                      fill={isSelected ? '#94522a' : '#142e22'}
+                      stroke="#ffffff"
+                      strokeWidth="2.5"
+                    />
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+
+          <div className="lg:col-span-7 space-y-6">
+            <div className="space-y-1.5">
+              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#94522a]">
+                Cobertura Nacional
+              </span>
+              <h2 className="!font-sans text-2xl sm:text-3xl font-bold tracking-tight text-[#161d19]">
+                Onde o EquiFlow entra primeiro
+              </h2>
+              <p className="text-sm text-[#525c56]">
+                Selecione uma região para ver os principais polos hípicos e reservar prioridade na sua zona.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {(Object.keys(REGION_HUBS) as RegionKey[]).map((hub) => {
+                const active = activeRegionHub === hub;
+                return (
+                  <button
+                    key={hub}
+                    type="button"
+                    onClick={() => setActiveRegionHub(hub)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                      active
+                        ? 'bg-[#142e22] text-white border-[#142e22]'
+                        : 'bg-[#f7f5f0] text-[#161d19] border-[#e2dcd0] hover:border-[#bfb5a3]'
+                    }`}
+                  >
+                    {hub}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="rounded-2xl bg-[#f7f5f0] border border-[#e6e0d5] p-6 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="!font-sans text-lg font-bold text-[#161d19]">{activeRegionHub}</h3>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-white border border-[#e2dcd0] text-[#142e22]">
+                  Abertura Prioritária
+                </span>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#78827c]">
+                    Concursos &amp; Polos
+                  </div>
+                  <div className="font-medium text-[#161d19] mt-1">{activeHubInfo.circuits}</div>
+                </div>
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#78827c]">
+                    Vertente Principal
+                  </div>
+                  <div className="font-medium text-[#161d19] mt-1">{activeHubInfo.focus}</div>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-[#e2dcd0] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <span className="text-xs text-[#525c56]">{activeHubInfo.demand}</span>
+                <button
+                  type="button"
+                  onClick={() => handleSelectRegionFromMap(activeRegionHub)}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#94522a] hover:underline shrink-0 cursor-pointer"
+                >
+                  Inscrever nesta região →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Documentary Verification Pipeline */}
+      <section className="rounded-3xl bg-[#142e22] text-white border border-[#244c3a] p-6 sm:p-10 shadow-xl">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-5 space-y-4">
+            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#e3b778]">
+              Filtro Rigoroso de Confiança
+            </span>
+            <h2 className="!font-sans text-2xl sm:text-3xl font-bold tracking-tight text-white">
+              Auto-registo online. Publicação só após verificação documental.
+            </h2>
+            <p className="text-sm text-[#c7d4cd] leading-relaxed">
+              Qualquer profissional se inscreve online em 2 minutos através do link direto, mas
+              nenhum perfil fica ativo sem a validação dos documentos obrigatórios de cada área.
+            </p>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {(['Grooms', 'Ferradores', 'Veterinários', 'Transporte'] as PreviewCategory[]).map(
+                (tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setVerificationTab(tab)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                      verificationTab === tab
+                        ? 'bg-[#94522a] text-white'
+                        : 'bg-white/10 text-[#d7e2dc] hover:bg-white/15'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 rounded-2xl bg-[#0e2219] border border-white/15 p-6 sm:p-7 space-y-5">
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-[#e3b778]">
+                  Checklist de Aprovação • {verificationTab}
+                </div>
+                <h3 className="!font-sans text-lg font-bold text-white mt-0.5">
+                  {activeVerif.subtitle}
+                </h3>
+              </div>
+              <FileCheck2 className="w-6 h-6 text-[#e3b778] shrink-0" />
+            </div>
+
+            <ul className="space-y-3">
+              {activeVerif.docs.map((doc) => (
+                <li
+                  key={doc}
+                  className="flex items-start gap-3 text-sm text-[#eef3f0] bg-white/5 border border-white/10 rounded-xl px-4 py-3"
+                >
+                  <CheckCircle2 className="w-4 h-4 text-[#e3b778] shrink-0 mt-0.5" />
+                  <span>{doc}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="text-xs text-[#b7c7bf] flex items-center gap-2 pt-1">
+              <Lock className="w-3.5 h-3.5 text-[#e3b778] shrink-0" />
+              <span>{activeVerif.rule}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
       <section className="rounded-3xl bg-[#f1ede4] border border-[#e3dccf] p-6 sm:p-10 space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
@@ -825,6 +1187,12 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
           </div>
 
           <div className="lg:col-span-8 p-7 sm:p-10">
+            {regionNotice && (
+              <div className="mb-5 rounded-xl bg-[#edf3f0] border border-[#b8d0c3] px-4 py-2.5 text-xs font-semibold text-[#142e22]">
+                ✓ {regionNotice}
+              </div>
+            )}
+
             {submittedLead ? (
               <div className="rounded-2xl bg-[#f4f8f5] border border-[#b8d4c1] p-6 sm:p-8 space-y-5">
                 <div className="flex items-start gap-3">
@@ -897,6 +1265,20 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Live Form Progress Bar */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-[#525c56]">
+                    <span>Progresso da inscrição</span>
+                    <span className="tabular-nums text-[#142e22]">{formProgress}%</span>
+                  </div>
+                  <div className="h-1.5 w-full rounded-full bg-[#efeae0] overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-[#142e22] transition-all duration-300"
+                      style={{ width: `${formProgress}%` }}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-[#161d19]">
                     1. Qual é o seu perfil principal?
@@ -1096,7 +1478,9 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({ onExploreMvp }
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#94522a] hover:bg-[#7d4320] text-white font-semibold text-sm shadow-md transition-colors cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
-                  Garantir Lugar na Lista EquiFlow
+                  {role === 'cavaleiro'
+                    ? 'Garantir Acesso Prioritário como Cavaleiro'
+                    : 'Candidatar Perfil Fundador EquiFlow'}
                 </button>
               </form>
             )}

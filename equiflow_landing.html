@@ -4,38 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light" />
-  <title>EquiFlow Portugal — Acesso Antecipado &amp; Validação</title>
+  <title>EquiFlow Portugal — Contratação Equestre Verificada</title>
   <style>
     :root {
       color-scheme: light;
       --bg: #f7f5f0;
-      --bg-alt: #f0ece3;
+      --bg-alt: #efebe2;
       --surface: #ffffff;
       --surface-soft: #fcfbf8;
-      --border: #e4ded2;
-      --border-strong: #cfc6b5;
+      --border: #e3ddd0;
+      --border-strong: #ccc2b0;
       --forest: #142e22;
-      --forest-hover: #0d2017;
+      --forest-deep: #0d2017;
       --forest-soft: #edf3f0;
       --saddle: #94522a;
-      --saddle-hover: #7c4220;
+      --saddle-hover: #7b411f;
       --saddle-soft: #fbf3ee;
-      --gold: #d9a86c;
+      --gold: #e3b778;
       --gold-soft: #fbf5e9;
-      --ink: #161d19;
-      --muted: #525c56;
+      --ink: #141c17;
+      --muted: #505b54;
       --subtle: #78827c;
       --radius-sm: 10px;
       --radius-md: 16px;
       --radius-lg: 24px;
-      --shadow-sm: 0 2px 10px rgba(20, 46, 34, 0.04);
-      --shadow-md: 0 18px 48px -12px rgba(20, 46, 34, 0.12);
+      --shadow-sm: 0 2px 12px rgba(20, 46, 34, 0.04);
+      --shadow-md: 0 22px 54px -14px rgba(20, 46, 34, 0.13);
       --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     html {
       scroll-behavior: smooth;
@@ -48,21 +46,22 @@
     body {
       margin: 0;
       padding: 0;
-      background: var(--bg);
+      background:
+        radial-gradient(circle at 85% 6%, rgba(148, 82, 42, 0.045) 0%, transparent 38%),
+        radial-gradient(circle at 12% 24%, rgba(20, 46, 34, 0.04) 0%, transparent 42%),
+        var(--bg);
       color: var(--ink);
       font-family: var(--font-sans);
       line-height: 1.5;
     }
 
-    input, select, textarea, button {
-      font-family: inherit;
-    }
+    input, select, textarea, button { font-family: inherit; }
 
     input, select, textarea {
       color-scheme: light !important;
       background-color: #ffffff !important;
-      color: #161d19 !important;
-      -webkit-text-fill-color: #161d19 !important;
+      color: #141c17 !important;
+      -webkit-text-fill-color: #141c17 !important;
     }
 
     input::placeholder, textarea::placeholder {
@@ -71,26 +70,23 @@
       opacity: 1 !important;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .container {
       width: 100%;
-      max-width: 1160px;
+      max-width: 1180px;
       margin: 0 auto;
       padding: 0 20px;
     }
 
-    /* Header */
+    /* Sticky Topbar */
     .topbar {
       position: sticky;
       top: 0;
       z-index: 40;
-      background: rgba(247, 245, 240, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(247, 245, 240, 0.9);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
 
@@ -111,15 +107,13 @@
     .brand-mark {
       width: 38px;
       height: 38px;
-      border-radius: 10px;
+      border-radius: 11px;
       background: var(--forest);
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 15px;
-      letter-spacing: -0.02em;
+      box-shadow: 0 4px 12px rgba(20, 46, 34, 0.18);
     }
 
     .brand-name {
@@ -153,9 +147,7 @@
       transition: color 0.15s ease;
     }
 
-    .nav-link:hover {
-      color: var(--ink);
-    }
+    .nav-link:hover { color: var(--ink); }
 
     .btn {
       display: inline-flex;
@@ -165,33 +157,29 @@
       font-size: 14px;
       font-weight: 600;
       border-radius: 12px;
-      padding: 12px 20px;
+      padding: 13px 22px;
       border: 1px solid transparent;
       cursor: pointer;
       transition: all 0.18s ease;
     }
 
-    .btn-sm {
-      padding: 9px 16px;
-      font-size: 13px;
-      border-radius: 10px;
-    }
+    .btn-sm { padding: 9px 16px; font-size: 13px; border-radius: 10px; }
 
     .btn-primary {
       background: var(--forest);
       color: #ffffff;
-      box-shadow: 0 10px 24px -8px rgba(20, 46, 34, 0.35);
+      box-shadow: 0 12px 26px -8px rgba(20, 46, 34, 0.36);
     }
 
     .btn-primary:hover {
-      background: var(--forest-hover);
+      background: var(--forest-deep);
       transform: translateY(-1px);
     }
 
     .btn-saddle {
       background: var(--saddle);
       color: #ffffff;
-      box-shadow: 0 10px 24px -8px rgba(148, 82, 42, 0.32);
+      box-shadow: 0 12px 26px -8px rgba(148, 82, 42, 0.34);
     }
 
     .btn-saddle:hover {
@@ -205,15 +193,20 @@
       border-color: var(--border-strong);
     }
 
-    .btn-outline:hover {
-      background: var(--bg-alt);
-    }
+    .btn-outline:hover { background: var(--bg-alt); }
 
     main {
-      padding: 48px 0 80px;
+      padding: 52px 0 88px;
       display: flex;
       flex-direction: column;
-      gap: 80px;
+      gap: 88px;
+    }
+
+    .eyebrow-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .eyebrow {
@@ -221,27 +214,29 @@
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.17em;
       color: var(--saddle);
       margin-bottom: 10px;
     }
 
+    .eyebrow-row .eyebrow { margin-bottom: 0; }
+
     h1 {
       margin: 0;
-      font-size: clamp(2.1rem, 4.4vw, 3.35rem);
+      font-size: clamp(2.2rem, 4.4vw, 3.4rem);
       font-weight: 800;
-      letter-spacing: -0.038em;
-      line-height: 1.07;
-      color: #121c16;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: #101914;
     }
 
     h2 {
       margin: 0;
       font-size: clamp(1.55rem, 2.8vw, 2.15rem);
       font-weight: 800;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.032em;
       line-height: 1.15;
-      color: #121c16;
+      color: #101914;
     }
 
     h3 {
@@ -252,26 +247,23 @@
       color: var(--ink);
     }
 
-    /* Hero Grid */
+    /* Hero */
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 44px;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 48px;
       align-items: center;
     }
 
     .hero-lead {
       font-size: 17px;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.62;
       margin: 18px 0 28px;
       max-width: 540px;
     }
 
-    .hero-lead strong {
-      color: var(--ink);
-      font-weight: 600;
-    }
+    .hero-lead strong { color: var(--ink); font-weight: 600; }
 
     .hero-actions {
       display: flex;
@@ -295,19 +287,13 @@
       letter-spacing: -0.03em;
       color: var(--forest);
       line-height: 1.1;
+      font-variant-numeric: tabular-nums;
     }
 
-    .metric-val.accent {
-      color: var(--saddle);
-    }
+    .metric-val.accent { color: var(--saddle); }
+    .metric-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-    .metric-lbl {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* Interactive Network Preview Card (Zero Images) */
+    /* Interactive Network Preview Card */
     .preview-shell {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -319,12 +305,13 @@
     .preview-topbar {
       background: var(--bg);
       border-bottom: 1px solid var(--border);
-      padding: 14px 20px;
+      padding: 13px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       font-size: 12px;
+      flex-wrap: wrap;
     }
 
     .preview-title {
@@ -335,13 +322,31 @@
       color: var(--ink);
     }
 
-    .preview-region {
+    .urgent-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
       color: var(--muted);
-      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .urgent-toggle:hover { border-color: var(--saddle); color: var(--ink); }
+
+    .urgent-toggle.active {
+      background: var(--saddle);
+      border-color: var(--saddle);
+      color: #ffffff;
     }
 
     .preview-tabs {
-      padding: 14px 20px;
+      padding: 13px 20px;
       border-bottom: 1px solid var(--bg-alt);
       display: flex;
       flex-wrap: wrap;
@@ -360,21 +365,28 @@
       transition: all 0.15s ease;
     }
 
-    .preview-tab:hover {
-      color: var(--ink);
-    }
-
-    .preview-tab.active {
-      background: var(--forest);
-      color: #ffffff;
-    }
+    .preview-tab:hover { color: var(--ink); }
+    .preview-tab.active { background: var(--forest); color: #ffffff; }
 
     .preview-body {
       padding: 18px 20px;
       background: var(--surface-soft);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 11px;
+    }
+
+    .urgent-banner {
+      background: var(--saddle-soft);
+      border: 1px solid #e7cbb8;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--saddle-hover);
     }
 
     .pro-row {
@@ -386,18 +398,13 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      transition: border-color 0.15s ease;
+      transition: border-color 0.15s ease, transform 0.15s ease;
     }
 
-    .pro-row:hover {
-      border-color: var(--border-strong);
-    }
+    .pro-row:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+    .pro-row.urgent-highlight { border-color: #d9a484; box-shadow: 0 4px 14px rgba(148, 82, 42, 0.08); }
 
-    .pro-left {
-      display: flex;
-      align-items: flex-start;
-      gap: 13px;
-    }
+    .pro-left { display: flex; align-items: flex-start; gap: 13px; }
 
     .avatar-mono {
       width: 44px;
@@ -413,23 +420,10 @@
       color: var(--ink);
     }
 
-    .avatar-mono.vip {
-      background: var(--forest);
-      color: #ecd8b6;
-    }
+    .avatar-mono.vip { background: var(--forest); color: #ecd8b6; }
 
-    .pro-name-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .pro-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--ink);
-    }
+    .pro-name-line { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .pro-name { font-size: 14px; font-weight: 700; color: var(--ink); }
 
     .vip-tag {
       font-size: 10px;
@@ -443,45 +437,21 @@
       color: var(--saddle);
     }
 
-    .pro-role {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .pro-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 6px;
-      font-size: 11px;
-      color: var(--subtle);
-    }
-
-    .pro-verified {
-      color: var(--forest);
-      font-weight: 600;
-    }
-
-    .pro-right {
-      text-align: right;
-      flex-shrink: 0;
-    }
-
-    .pro-rate {
-      font-size: 14px;
+    .piquete-tag {
+      font-size: 10px;
       font-weight: 700;
-      color: var(--ink);
-      font-variant-numeric: tabular-nums;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: var(--forest-soft);
+      color: var(--forest);
     }
 
-    .pro-resp {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--forest);
-      margin-top: 3px;
-    }
+    .pro-role { font-size: 12px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+    .pro-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; font-size: 11px; color: var(--subtle); }
+    .pro-verified { color: var(--forest); font-weight: 600; }
+    .pro-right { text-align: right; flex-shrink: 0; }
+    .pro-rate { font-size: 14px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .pro-resp { font-size: 11px; font-weight: 600; color: var(--forest); margin-top: 3px; }
 
     .preview-foot {
       display: flex;
@@ -492,17 +462,14 @@
       color: var(--muted);
     }
 
-    .preview-foot a {
-      font-weight: 700;
-      color: var(--forest);
-    }
+    .preview-foot a { font-weight: 700; color: var(--forest); }
 
     /* Contrast Box */
     .contrast-box {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 36px;
+      padding: 38px;
       box-shadow: var(--shadow-sm);
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -531,19 +498,10 @@
       line-height: 1.5;
     }
 
-    .icon-bad {
-      color: #b3543a;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
+    .icon-bad { color: #b3543a; font-weight: 800; flex-shrink: 0; }
+    .icon-good { color: var(--forest); font-weight: 800; flex-shrink: 0; }
 
-    .icon-good {
-      color: var(--forest);
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-
-    /* Section Header */
+    /* Section Head */
     .sec-head {
       display: flex;
       align-items: flex-end;
@@ -553,19 +511,10 @@
       flex-wrap: wrap;
     }
 
-    .sec-desc {
-      font-size: 14px;
-      color: var(--muted);
-      max-width: 420px;
-      margin: 0;
-    }
+    .sec-desc { font-size: 14px; color: var(--muted); max-width: 420px; margin: 0; }
 
     /* 4 Specialties Grid */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 
     .spec-card {
       background: var(--surface);
@@ -578,38 +527,212 @@
       transition: border-color 0.15s ease, transform 0.15s ease;
     }
 
-    .spec-card:hover {
-      border-color: var(--border-strong);
-      transform: translateY(-2px);
+    .spec-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+    .spec-top { display: flex; align-items: center; justify-content: space-between; }
+    .spec-num { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: var(--saddle); }
+    .spec-tag { font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px; background: var(--bg-alt); color: var(--muted); }
+    .spec-card p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+
+    /* Regional Portugal Coverage */
+    .region-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 38px;
+      align-items: center;
     }
 
-    .spec-top {
+    .map-panel {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .map-caption {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .hub-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0 18px;
+    }
+
+    .hub-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .hub-btn:hover { border-color: var(--border-strong); }
+    .hub-btn.active { background: var(--forest); border-color: var(--forest); color: #ffffff; }
+
+    .hub-detail {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .hub-detail-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    .spec-num {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      color: var(--saddle);
-    }
-
-    .spec-tag {
+    .hub-badge {
       font-size: 11px;
-      font-weight: 600;
-      padding: 4px 9px;
+      font-weight: 700;
+      padding: 4px 10px;
       border-radius: 6px;
-      background: var(--bg-alt);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--forest);
+    }
+
+    .hub-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .hub-k {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--subtle);
+    }
+
+    .hub-v {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-top: 4px;
+    }
+
+    .hub-foot {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 12.5px;
       color: var(--muted);
     }
 
-    .spec-card p {
+    .hub-cta {
+      border: 0;
+      background: transparent;
+      color: var(--saddle);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .hub-cta:hover { text-decoration: underline; }
+
+    /* Documentary Verification Dark Showcase */
+    .verif-box {
+      background: var(--forest);
+      color: #ffffff;
+      border: 1px solid #244c3a;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-md);
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 38px;
+      align-items: start;
+    }
+
+    .verif-box h2 { color: #ffffff; }
+    .verif-desc { color: #c7d4cd; font-size: 14.5px; line-height: 1.6; margin: 14px 0 20px; }
+
+    .verif-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .verif-tab {
+      border: 0;
+      background: rgba(255, 255, 255, 0.1);
+      color: #d7e2dc;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .verif-tab:hover { background: rgba(255, 255, 255, 0.16); }
+    .verif-tab.active { background: var(--saddle); color: #ffffff; }
+
+    .verif-panel {
+      background: var(--forest-deep);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .verif-list {
+      list-style: none;
       margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .verif-list li {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 12px;
+      padding: 12px 14px;
       font-size: 13.5px;
-      color: var(--muted);
-      line-height: 1.55;
+      color: #eef3f0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .verif-rule {
+      font-size: 12px;
+      color: #b7c7bf;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 2px;
     }
 
     /* How It Works */
@@ -617,7 +740,7 @@
       background: var(--bg-alt);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 36px;
+      padding: 38px;
     }
 
     .seg-control {
@@ -641,22 +764,10 @@
       transition: all 0.15s ease;
     }
 
-    .seg-btn.active-forest {
-      background: var(--forest);
-      color: #ffffff;
-    }
+    .seg-btn.active-forest { background: var(--forest); color: #ffffff; }
+    .seg-btn.active-saddle { background: var(--saddle); color: #ffffff; }
 
-    .seg-btn.active-saddle {
-      background: var(--saddle);
-      color: #ffffff;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 24px;
-    }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
 
     .step-card {
       background: var(--surface);
@@ -668,25 +779,11 @@
       gap: 10px;
     }
 
-    .step-card p {
-      margin: 0;
-      font-size: 13.5px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
+    .step-card p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
 
     /* Plans */
-    .plans-head {
-      text-align: center;
-      max-width: 580px;
-      margin: 0 auto 32px;
-    }
-
-    .plans-head p {
-      margin: 10px 0 0;
-      font-size: 14.5px;
-      color: var(--muted);
-    }
+    .plans-head { text-align: center; max-width: 580px; margin: 0 auto 32px; }
+    .plans-head p { margin: 10px 0 0; font-size: 14.5px; color: var(--muted); }
 
     .plans-grid {
       display: grid;
@@ -714,66 +811,18 @@
       box-shadow: var(--shadow-md);
     }
 
-    .plan-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    .plan-top { display: flex; align-items: center; justify-content: space-between; }
+    .plan-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .plan-card.vip .plan-label { color: var(--gold); }
+    .plan-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--bg-alt); color: var(--ink); }
+    .plan-card.vip .plan-pill { background: var(--saddle); color: #ffffff; }
+    .plan-price { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; margin: 14px 0 8px; }
+    .plan-price span { font-size: 14px; font-weight: 500; color: var(--muted); }
+    .plan-card.vip .plan-price span { color: #b7c7bf; }
+    .plan-sub { font-size: 14px; color: var(--muted); margin: 0 0 18px; }
+    .plan-card.vip .plan-sub { color: #cbd8d1; }
 
-    .plan-label {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-    }
-
-    .plan-card.vip .plan-label {
-      color: #e3b778;
-    }
-
-    .plan-pill {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: var(--bg-alt);
-      color: var(--ink);
-    }
-
-    .plan-card.vip .plan-pill {
-      background: var(--saddle);
-      color: #ffffff;
-    }
-
-    .plan-price {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin: 14px 0 8px;
-    }
-
-    .plan-price span {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--muted);
-    }
-
-    .plan-card.vip .plan-price span {
-      color: #b7c7bf;
-    }
-
-    .plan-sub {
-      font-size: 14px;
-      color: var(--muted);
-      margin: 0 0 18px;
-    }
-
-    .plan-card.vip .plan-sub {
-      color: #cbd8d1;
-    }
-
-    /* Validation Form Split */
+    /* Validation Form */
     .form-wrap {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -794,65 +843,53 @@
       gap: 32px;
     }
 
-    .form-aside h2 {
-      color: #ffffff;
-      margin-top: 4px;
+    .form-aside h2 { color: #ffffff; margin-top: 4px; }
+    .form-aside p { color: #c7d4cd; font-size: 14px; line-height: 1.6; margin: 12px 0 0; }
+    .perks { display: flex; flex-direction: column; gap: 16px; }
+    .perk strong { display: block; font-size: 14px; color: #ffffff; }
+    .perk span { display: block; font-size: 12.5px; color: #b7c7bf; margin-top: 2px; }
+    .aside-foot { padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.14); font-size: 12.5px; color: #c7d4cd; }
+
+    .form-main { padding: 38px 40px; }
+
+    .region-notice {
+      margin-bottom: 18px;
+      background: var(--forest-soft);
+      border: 1px solid #b8d0c3;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--forest);
     }
 
-    .form-aside p {
-      color: #c7d4cd;
-      font-size: 14px;
-      line-height: 1.6;
-      margin: 12px 0 0;
-    }
-
-    .perks {
+    .progress-wrap { margin-bottom: 22px; }
+    .progress-head {
       display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .perk strong {
-      display: block;
-      font-size: 14px;
-      color: #ffffff;
-    }
-
-    .perk span {
-      display: block;
-      font-size: 12.5px;
-      color: #b7c7bf;
-      margin-top: 2px;
-    }
-
-    .aside-foot {
-      padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.14);
-      font-size: 12.5px;
-      color: #c7d4cd;
-    }
-
-    .form-main {
-      padding: 38px 40px;
-    }
-
-    .field-group {
-      margin-bottom: 22px;
-    }
-
-    .field-label {
-      display: block;
-      font-size: 13.5px;
+      justify-content: space-between;
+      font-size: 11.5px;
       font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 9px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .progress-track {
+      height: 6px;
+      width: 100%;
+      border-radius: 999px;
+      background: var(--bg-alt);
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--forest);
+      transition: width 0.25s ease;
     }
 
-    .role-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    .field-group { margin-bottom: 22px; }
+    .field-label { display: block; font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 9px; }
+
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
     .role-card {
       text-align: left;
@@ -876,23 +913,10 @@
       box-shadow: 0 0 0 2px rgba(148, 82, 42, 0.12);
     }
 
-    .role-title {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--ink);
-    }
+    .role-title { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+    .role-desc { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-    .role-desc {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .chip {
       border: 1px solid var(--border);
@@ -906,29 +930,11 @@
       transition: all 0.15s ease;
     }
 
-    .chip.selected-forest {
-      background: var(--forest);
-      border-color: var(--forest);
-      color: #ffffff;
-    }
+    .chip.selected-forest { background: var(--forest); border-color: var(--forest); color: #ffffff; }
+    .chip.selected-saddle { background: var(--saddle); border-color: var(--saddle); color: #ffffff; }
 
-    .chip.selected-saddle {
-      background: var(--saddle);
-      border-color: var(--saddle);
-      color: #ffffff;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .grid-3-inputs {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 
     .control {
       width: 100%;
@@ -956,9 +962,7 @@
       margin-bottom: 14px;
     }
 
-    .vip-check input {
-      margin-top: 3px;
-    }
+    .vip-check input { margin-top: 3px; }
 
     .confirmation {
       background: var(--forest-soft);
@@ -967,10 +971,7 @@
       padding: 28px;
     }
 
-    .confirmation h3 {
-      color: var(--forest);
-      font-size: 20px;
-    }
+    .confirmation h3 { color: var(--forest); font-size: 20px; }
 
     .conf-card {
       background: #ffffff;
@@ -984,23 +985,11 @@
       gap: 6px;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     /* FAQ */
-    .faq-wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .faq-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 24px;
-    }
+    .faq-wrap { max-width: 760px; margin: 0 auto; width: 100%; }
+    .faq-list { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
 
     details {
       background: var(--surface);
@@ -1020,20 +1009,9 @@
       justify-content: space-between;
     }
 
-    summary::-webkit-details-marker {
-      display: none;
-    }
-
-    summary::after {
-      content: '+';
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--muted);
-    }
-
-    details[open] summary::after {
-      content: '−';
-    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: '+'; font-size: 18px; font-weight: 500; color: var(--muted); }
+    details[open] summary::after { content: '−'; }
 
     details p {
       margin: 12px 0 0;
@@ -1046,7 +1024,7 @@
 
     footer {
       border-top: 1px solid var(--border);
-      padding: 26px 0;
+      padding: 28px 0;
       font-size: 12.5px;
       color: var(--muted);
     }
@@ -1059,50 +1037,38 @@
       gap: 12px;
     }
 
-    @media (max-width: 960px) {
+    @media (max-width: 980px) {
       .hero-grid,
       .contrast-box,
+      .region-box,
+      .verif-box,
       .plans-grid,
-      .form-wrap {
-        grid-template-columns: 1fr;
-      }
+      .form-wrap { grid-template-columns: 1fr; }
       .contrast-col + .contrast-col {
         border-left: 0;
         border-top: 1px solid var(--border);
         padding-left: 0;
         padding-top: 28px;
       }
-      .grid-4 {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .grid-3 {
-        grid-template-columns: 1fr;
-      }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
-      .nav-links .nav-link {
-        display: none;
-      }
+      .nav-links .nav-link { display: none; }
       .grid-4,
+      .hub-cols,
       .role-grid,
       .grid-2,
-      .grid-3-inputs {
-        grid-template-columns: 1fr;
-      }
+      .grid-3-inputs { grid-template-columns: 1fr; }
       .form-main,
       .form-aside,
       .contrast-box,
-      .how-box {
-        padding: 24px 20px;
-      }
-      .pro-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .pro-right {
-        text-align: left;
-      }
+      .region-box,
+      .verif-box,
+      .how-box { padding: 24px 20px; }
+      .pro-row { flex-direction: column; align-items: flex-start; }
+      .pro-right { text-align: left; }
     }
   </style>
 </head>
@@ -1110,7 +1076,13 @@
   <header class="topbar">
     <div class="container topbar-inner">
       <div class="brand">
-        <div class="brand-mark">EF</div>
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 15V9a6 6 0 1 1 12 0v6"/>
+            <path d="M4 15h16"/>
+            <path d="M7 15v3a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-3"/>
+          </svg>
+        </div>
         <div>
           <span class="brand-name">EquiFlow</span>
           <span class="brand-sub">Portugal</span>
@@ -1118,7 +1090,8 @@
       </div>
       <nav class="nav-links">
         <a href="#especialidades" class="nav-link">Especialidades</a>
-        <a href="#como-funciona" class="nav-link">Como funciona</a>
+        <a href="#regioes" class="nav-link">Cobertura</a>
+        <a href="#verificacao" class="nav-link">Verificação</a>
         <a href="#planos" class="nav-link">Planos</a>
         <a href="#validation-form" class="btn btn-sm btn-primary">Lista de Espera</a>
       </nav>
@@ -1129,7 +1102,13 @@
     <!-- Hero -->
     <section class="hero-grid">
       <div>
-        <span class="eyebrow">Portugal Continental • Acesso Antecipado</span>
+        <div class="eyebrow-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94522a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 15V9a6 6 0 1 1 12 0v6"/><path d="M4 15h16"/><path d="M7 15v3a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-3"/>
+          </svg>
+          <span class="eyebrow">Portugal Continental • Acesso Antecipado</span>
+        </div>
+
         <h1>Contratação equestre com verificação, rapidez e zero improviso.</h1>
         <p class="hero-lead">
           Deixe para trás os grupos de WhatsApp na véspera de cada concurso. O
@@ -1139,7 +1118,7 @@
 
         <div class="hero-actions">
           <a href="#validation-form" class="btn btn-primary">Garantir Acesso Prioritário →</a>
-          <a href="#como-funciona" class="btn btn-outline">Ver Como Funciona</a>
+          <a href="#regioes" class="btn btn-outline">Ver Cobertura Nacional</a>
         </div>
 
         <div class="hero-metrics">
@@ -1158,22 +1137,28 @@
         </div>
       </div>
 
-      <!-- Interactive UI Network Preview (Zero Images) -->
+      <!-- Interactive UI Network Preview -->
       <div class="preview-shell">
         <div class="preview-topbar">
           <span class="preview-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#142e22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
             Pré-visualização da Rede Verificada
           </span>
-          <span class="preview-region">Lisboa • Golegã • Vilamoura • Norte</span>
+          <button type="button" id="urgent-toggle-btn" onclick="toggleUrgentPreview()" class="urgent-toggle">
+            ⚡ Urgência em Prova: Simular
+          </button>
         </div>
 
         <div class="preview-tabs" id="preview-tabs"></div>
 
         <div class="preview-body">
+          <div id="urgent-banner" class="urgent-banner hidden">
+            <span>⚠ Modo Piquete CSN/CSI ativo — resposta imediata</span>
+            <strong>&lt; 15 min</strong>
+          </div>
           <div id="preview-cards" style="display: flex; flex-direction: column; gap: 10px;"></div>
           <div class="preview-foot">
-            <span>⚡ Filtro de Urgência em Prova CSN/CSI incluído</span>
+            <span>Portugal Continental • 5 Zonas Ativas</span>
             <a href="#validation-form">Reservar vaga →</a>
           </div>
         </div>
@@ -1237,6 +1222,47 @@
           <p>Motoristas e viaturas com licença DGAV para deslocações nacionais, urgências e circuitos.</p>
         </div>
       </div>
+    </section>
+
+    <!-- Interactive Portugal Coverage Explorer -->
+    <section id="regioes" class="region-box">
+      <div class="map-panel">
+        <span class="map-caption">Clique numa região no mapa</span>
+        <svg viewBox="0 0 210 350" style="width: 190px; height: auto;" aria-label="Mapa regional EquiFlow Portugal">
+          <path d="M78,24 L132,20 L152,48 L146,96 L154,140 L142,186 L156,232 L144,274 L134,316 L98,324 L66,312 L72,272 L50,224 L42,188 L56,144 L62,92 Z" fill="#e6e0d2" stroke="#cfc5b2" stroke-width="2" />
+          <line x1="96" y1="64" x2="86" y2="158" stroke="#bfb49f" stroke-width="1.5" stroke-dasharray="3 3" />
+          <line x1="86" y1="158" x2="56" y2="202" stroke="#bfb49f" stroke-width="1.5" stroke-dasharray="3 3" />
+          <line x1="86" y1="158" x2="120" y2="224" stroke="#bfb49f" stroke-width="1.5" stroke-dasharray="3 3" />
+          <line x1="120" y1="224" x2="102" y2="306" stroke="#bfb49f" stroke-width="1.5" stroke-dasharray="3 3" />
+          <g id="svg-hub-nodes"></g>
+        </svg>
+      </div>
+
+      <div>
+        <span class="eyebrow">Cobertura Nacional</span>
+        <h2>Onde o EquiFlow entra primeiro</h2>
+        <p style="font-size: 14.5px; color: var(--muted); margin: 10px 0 0;">
+          Selecione uma região para ver os principais polos hípicos e reservar prioridade na sua zona.
+        </p>
+
+        <div class="hub-tabs" id="hub-tabs"></div>
+
+        <div class="hub-detail" id="hub-detail"></div>
+      </div>
+    </section>
+
+    <!-- Documentary Verification Pipeline -->
+    <section id="verificacao" class="verif-box">
+      <div>
+        <span class="eyebrow" style="color: var(--gold);">Filtro Rigoroso de Confiança</span>
+        <h2>Auto-registo online. Publicação só após verificação documental.</h2>
+        <p class="verif-desc">
+          Qualquer profissional se inscreve online em 2 minutos através do link direto, mas nenhum perfil fica ativo sem a validação dos documentos obrigatórios de cada especialidade.
+        </p>
+        <div class="verif-tabs" id="verif-tabs"></div>
+      </div>
+
+      <div class="verif-panel" id="verif-panel"></div>
     </section>
 
     <!-- How It Works -->
@@ -1331,6 +1357,8 @@
       </aside>
 
       <div class="form-main">
+        <div id="region-notice" class="region-notice hidden"></div>
+
         <div id="confirmation-box" class="confirmation hidden">
           <h3 id="conf-title">Lugar garantido!</h3>
           <p id="conf-desc" style="font-size: 14px; margin: 8px 0 0; color: #2d4437;"></p>
@@ -1342,6 +1370,16 @@
         </div>
 
         <form id="lead-form" onsubmit="submitLead(event)">
+          <div class="progress-wrap">
+            <div class="progress-head">
+              <span>Progresso da inscrição</span>
+              <span id="progress-pct" style="color: var(--forest); font-variant-numeric: tabular-nums;">50%</span>
+            </div>
+            <div class="progress-track">
+              <div id="progress-bar" class="progress-bar" style="width: 50%;"></div>
+            </div>
+          </div>
+
           <div class="field-group">
             <span class="field-label">1. Qual é o seu perfil principal?</span>
             <div class="role-grid">
@@ -1387,15 +1425,15 @@
           <div class="field-group grid-3-inputs">
             <div>
               <label class="field-label" style="font-size: 12px;" for="field-name">Nome completo *</label>
-              <input id="field-name" type="text" required placeholder="Ex: João Quaresma" class="control" />
+              <input id="field-name" type="text" required oninput="updateProgress()" placeholder="Ex: João Quaresma" class="control" />
             </div>
             <div>
               <label class="field-label" style="font-size: 12px;" for="field-whatsapp">WhatsApp / Telemóvel *</label>
-              <input id="field-whatsapp" type="tel" required placeholder="Ex: 912 345 678" class="control" />
+              <input id="field-whatsapp" type="tel" required oninput="updateProgress()" placeholder="Ex: 912 345 678" class="control" />
             </div>
             <div>
               <label class="field-label" style="font-size: 12px;" for="field-email">Email *</label>
-              <input id="field-email" type="email" required placeholder="nome@exemplo.pt" class="control" />
+              <input id="field-email" type="email" required oninput="updateProgress()" placeholder="nome@exemplo.pt" class="control" />
             </div>
           </div>
 
@@ -1407,7 +1445,7 @@
             <textarea id="field-notes" rows="2" placeholder="Sugestões, concursos habituais ou funcionalidades que gostava de ver? (opcional)" class="control"></textarea>
           </div>
 
-          <button type="submit" class="btn btn-saddle">Garantir Lugar na Lista EquiFlow →</button>
+          <button type="submit" id="submit-cta-btn" class="btn btn-saddle">Garantir Acesso Prioritário como Cavaleiro →</button>
         </form>
       </div>
     </section>
@@ -1441,7 +1479,7 @@
 
   <footer>
     <div class="container footer-inner">
-      <span><strong style="color: #161d19;">EquiFlow Portugal</strong> — Contratação equestre verificada</span>
+      <span><strong style="color: #141c17;">EquiFlow Portugal</strong> — Contratação equestre verificada</span>
       <span>Lisboa • Golegã • Vilamoura • Porto &amp; Norte • Alentejo</span>
     </div>
   </footer>
@@ -1449,21 +1487,68 @@
   <script>
     const PREVIEW_DATA = {
       'Grooms': [
-        { initials: 'MC', name: 'Marta Cardoso', role: 'Groom de Concursos CSN / CSI', region: 'Ribatejo • Golegã & Lisboa', badge: 'Identidade & Referências Verificadas', rate: '€95 / dia', resp: '< 15 min', vip: true },
-        { initials: 'TP', name: 'Tiago Pereira', role: 'Tratador de Estábulo & Preparação', region: 'Algarve • Vilamoura', badge: 'Identidade Verificada', rate: '€80 / dia', resp: '< 30 min', vip: false }
+        { initials: 'MC', name: 'Marta Cardoso', role: 'Groom de Concursos CSN / CSI', region: 'Ribatejo • Golegã & Lisboa', badge: 'Identidade & Referências Verificadas', rate: '€95 / dia', resp: '< 10 min', vip: true, urgentReady: true },
+        { initials: 'TP', name: 'Tiago Pereira', role: 'Tratador de Estábulo & Preparação', region: 'Algarve • Vilamoura', badge: 'Identidade Verificada', rate: '€80 / dia', resp: '< 30 min', vip: false, urgentReady: false }
       ],
       'Ferradores': [
-        { initials: 'DS', name: 'Diogo Sousa', role: 'Ferrador Ortopédico & Urgências', region: 'Lisboa & Tejo • Cascais', badge: 'Certificação & Seguro Validados', rate: '€90 / serviço', resp: '< 20 min', vip: true },
-        { initials: 'RA', name: 'Rui Almeida', role: 'Ferração Desportiva & Rotina', region: 'Porto & Norte', badge: 'Identidade Verificada', rate: '€75 / serviço', resp: '< 45 min', vip: false }
+        { initials: 'DS', name: 'Diogo Sousa', role: 'Ferrador Ortopédico & Urgências', region: 'Lisboa & Tejo • Cascais', badge: 'Certificação & Seguro Validados', rate: '€90 / serviço', resp: '< 12 min', vip: true, urgentReady: true },
+        { initials: 'RA', name: 'Rui Almeida', role: 'Ferração Desportiva & Rotina', region: 'Porto & Norte', badge: 'Identidade Verificada', rate: '€75 / serviço', resp: '< 45 min', vip: false, urgentReady: false }
       ],
       'Veterinários': [
-        { initials: 'AF', name: 'Dra. Ana Ferreira', role: 'Médica Veterinária Equina (Urgência 24h)', region: 'Algarve • Vilamoura & Alentejo', badge: 'Cédula OMV Verificada', rate: '€120 / chamada', resp: '< 10 min', vip: true },
-        { initials: 'JM', name: 'Dr. João Mendes', role: 'Clínica Equina & Reprodução', region: 'Ribatejo / Golegã', badge: 'Cédula OMV Verificada', rate: '€100 / consulta', resp: '< 25 min', vip: false }
+        { initials: 'AF', name: 'Dra. Ana Ferreira', role: 'Médica Veterinária Equina (Urgência 24h)', region: 'Algarve • Vilamoura & Alentejo', badge: 'Cédula OMV Verificada', rate: '€120 / chamada', resp: '< 8 min', vip: true, urgentReady: true },
+        { initials: 'JM', name: 'Dr. João Mendes', role: 'Clínica Equina & Reprodução', region: 'Ribatejo / Golegã', badge: 'Cédula OMV Verificada', rate: '€100 / consulta', resp: '< 25 min', vip: false, urgentReady: false }
       ],
       'Transporte': [
-        { initials: 'LT', name: 'LusoTrans Equus', role: 'Camião 6 Cavalos & Reboque Climatizado', region: 'Portugal Continental & Espanha', badge: 'Licença DGAV Verificada', rate: '€1,25 / km', resp: '< 20 min', vip: true },
-        { initials: 'HC', name: 'Henrique Costa', role: 'Transporte Individual Urgente (2 Cavalos)', region: 'Lisboa • Santarém • Porto', badge: 'Licença DGAV Verificada', rate: '€1,10 / km', resp: '< 35 min', vip: false }
+        { initials: 'LT', name: 'LusoTrans Equus', role: 'Camião 6 Cavalos & Reboque Climatizado', region: 'Portugal Continental & Espanha', badge: 'Licença DGAV Verificada', rate: '€1,25 / km', resp: '< 15 min', vip: true, urgentReady: true },
+        { initials: 'HC', name: 'Henrique Costa', role: 'Transporte Individual Urgente (2 Cavalos)', region: 'Lisboa • Santarém • Porto', badge: 'Licença DGAV Verificada', rate: '€1,10 / km', resp: '< 35 min', vip: false, urgentReady: false }
       ]
+    };
+
+    const REGION_HUBS = {
+      'Porto & Norte': { circuits: 'Esposende • Matosinhos • Braga • Ponte de Lima', focus: 'Saltos de Obstáculos, Centros Hípicos & Transporte Regional', demand: 'Alta procura por Grooms e Ferradores ao fim de semana', cx: 96, cy: 64 },
+      'Ribatejo / Golegã': { circuits: 'Golegã • Santarém • Abrantes • Coruche', focus: 'Dressage, Lusitano, Feira Nacional do Cavalo & Coudelarias', demand: 'Procura intensa de Tratadores, Ferradores e Clínica Equina', cx: 86, cy: 158 },
+      'Lisboa & Tejo': { circuits: 'Cascais • Beloura • Sociedade Hípica Portuguesa • Mafra', focus: 'CSN/CSI, Estabulagem Premium & Apoio Diário', demand: 'Urgência em prova e substituição rápida de Grooms', cx: 56, cy: 202 },
+      'Alentejo': { circuits: 'Évora • Alter do Chão • Elvas • Comporta', focus: 'Coudelarias, Criação, Endurance & Transporte Longo Curso', demand: 'Necessidade contínua de Veterinários, Ferradores e Transporte DGAV', cx: 120, cy: 224 },
+      'Algarve / Vilamoura': { circuits: 'Vilamoura Atlantic Tour • Vale do Lobo • Portimão', focus: 'Circuitos Internacionais CSI & Temporadas de Inverno', demand: 'Equipas internacionais a contratar Grooms e Piquete 24h', cx: 102, cy: 306 }
+    };
+
+    const VERIF_SPECS = {
+      'Grooms': {
+        subtitle: 'Validação de Identidade e Experiência Prática',
+        docs: [
+          'Cartão de Cidadão ou Título de Residência válido',
+          'NIF / Enquadramento fiscal para emissão de recibos',
+          'Comprovação de experiência em estábulo ou concursos CSN/CSI'
+        ],
+        rule: 'Perfis de tratadores só ficam visíveis após validação completa de identidade.'
+      },
+      'Ferradores': {
+        subtitle: 'Qualificação Técnica e Responsabilidade',
+        docs: [
+          'Identificação civil e fiscal verificadas (CC + NIF)',
+          'Certificação profissional / Portefólio de ferração desportiva',
+          'Seguro de responsabilidade civil e área geográfica de deslocação'
+        ],
+        rule: 'Garante segurança para cavalos de competição e transparência nos deslocamentos.'
+      },
+      'Veterinários': {
+        subtitle: 'Conformidade Clínica Obrigatória',
+        docs: [
+          'Número ativo da Cédula da Ordem dos Médicos Veterinários (OMV)',
+          'Verificação de identidade e clínica/equipa móvel associada',
+          'Disponibilidade declarada para piquete de urgência 24h em provas'
+        ],
+        rule: 'Nenhum médico veterinário é publicado sem confirmação direta do número de cédula OMV.'
+      },
+      'Transporte': {
+        subtitle: 'Licenciamento Oficial de Bem-Estar Animal',
+        docs: [
+          'Autorização/Licença DGAV ativa para transporte de equídeos vivos',
+          'Certificado de aptidão do condutor e inspeção da viatura/reboque',
+          'Seguro de carga viva e cobertura nacional ou transfronteiriça'
+        ],
+        rule: 'Impede anúncios clandestinos sem licença DGAV e protege o bem-estar do cavalo.'
+      }
     };
 
     const CATEGORIES = ['Groom / Tratador', 'Ferrador', 'Veterinário Equino', 'Transporte DGAV'];
@@ -1474,6 +1559,9 @@
 
     let state = {
       previewCat: 'Grooms',
+      urgentPreview: false,
+      activeHub: 'Ribatejo / Golegã',
+      verifCat: 'Veterinários',
       role: 'cavaleiro',
       categories: ['Groom / Tratador'],
       difficulties: [],
@@ -1481,20 +1569,27 @@
     };
 
     function renderPreview() {
-      const tabsEl = document.getElementById('preview-tabs');
-      tabsEl.innerHTML = Object.keys(PREVIEW_DATA).map(cat => `
+      const btn = document.getElementById('urgent-toggle-btn');
+      btn.className = state.urgentPreview ? 'urgent-toggle active' : 'urgent-toggle';
+      btn.textContent = state.urgentPreview ? '⚡ Urgência em Prova: Ativo' : '⚡ Urgência em Prova: Simular';
+      document.getElementById('urgent-banner').className = state.urgentPreview ? 'urgent-banner' : 'urgent-banner hidden';
+
+      document.getElementById('preview-tabs').innerHTML = Object.keys(PREVIEW_DATA).map(cat => `
         <button type="button" onclick="setPreviewCat('${cat}')" class="preview-tab ${state.previewCat === cat ? 'active' : ''}">${cat}</button>
       `).join('');
 
-      const list = PREVIEW_DATA[state.previewCat];
+      const base = PREVIEW_DATA[state.previewCat];
+      const list = state.urgentPreview ? base.filter(x => x.urgentReady) : base;
+
       document.getElementById('preview-cards').innerHTML = list.map(item => `
-        <div class="pro-row">
+        <div class="pro-row ${state.urgentPreview && item.urgentReady ? 'urgent-highlight' : ''}">
           <div class="pro-left">
             <div class="avatar-mono ${item.vip ? 'vip' : ''}">${item.initials}</div>
             <div>
               <div class="pro-name-line">
                 <span class="pro-name">${item.name}</span>
                 ${item.vip ? '<span class="vip-tag">VIP</span>' : ''}
+                ${item.urgentReady ? '<span class="piquete-tag">Piquete Rápido</span>' : ''}
               </div>
               <div class="pro-role">${item.role}</div>
               <div class="pro-meta">
@@ -1511,9 +1606,111 @@
       `).join('');
     }
 
+    function toggleUrgentPreview() {
+      state.urgentPreview = !state.urgentPreview;
+      renderPreview();
+    }
+
     function setPreviewCat(cat) {
       state.previewCat = cat;
       renderPreview();
+    }
+
+    function renderRegions() {
+      const keys = Object.keys(REGION_HUBS);
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const nodesEl = document.getElementById('svg-hub-nodes');
+      nodesEl.innerHTML = '';
+      keys.forEach(key => {
+        const h = REGION_HUBS[key];
+        const sel = state.activeHub === key;
+        const g = document.createElementNS(svgNS, 'g');
+        g.style.cursor = 'pointer';
+        g.addEventListener('click', () => setActiveHub(key));
+        if (sel) {
+          const halo = document.createElementNS(svgNS, 'circle');
+          halo.setAttribute('cx', h.cx);
+          halo.setAttribute('cy', h.cy);
+          halo.setAttribute('r', '18');
+          halo.setAttribute('fill', '#142e22');
+          halo.setAttribute('opacity', '0.14');
+          g.appendChild(halo);
+        }
+        const dot = document.createElementNS(svgNS, 'circle');
+        dot.setAttribute('cx', h.cx);
+        dot.setAttribute('cy', h.cy);
+        dot.setAttribute('r', sel ? '8.5' : '6');
+        dot.setAttribute('fill', sel ? '#94522a' : '#142e22');
+        dot.setAttribute('stroke', '#ffffff');
+        dot.setAttribute('stroke-width', '2.5');
+        g.appendChild(dot);
+        nodesEl.appendChild(g);
+      });
+
+      document.getElementById('hub-tabs').innerHTML = keys.map(k => `
+        <button type="button" onclick="setActiveHub('${k}')" class="hub-btn ${state.activeHub === k ? 'active' : ''}">${k}</button>
+      `).join('');
+
+      const info = REGION_HUBS[state.activeHub];
+      document.getElementById('hub-detail').innerHTML = `
+        <div class="hub-detail-top">
+          <h3>${state.activeHub}</h3>
+          <span class="hub-badge">Abertura Prioritária</span>
+        </div>
+        <div class="hub-cols">
+          <div>
+            <div class="hub-k">Concursos &amp; Polos</div>
+            <div class="hub-v">${info.circuits}</div>
+          </div>
+          <div>
+            <div class="hub-k">Vertente Principal</div>
+            <div class="hub-v">${info.focus}</div>
+          </div>
+        </div>
+        <div class="hub-foot">
+          <span>${info.demand}</span>
+          <button type="button" onclick="selectHubInForm('${state.activeHub}')" class="hub-cta">Inscrever nesta região →</button>
+        </div>
+      `;
+    }
+
+    function setActiveHub(hub) {
+      state.activeHub = hub;
+      renderRegions();
+    }
+
+    function selectHubInForm(hub) {
+      const sel = document.getElementById('field-region');
+      sel.value = hub;
+      const notice = document.getElementById('region-notice');
+      notice.textContent = `✓ Região "${hub}" selecionada no formulário abaixo.`;
+      notice.classList.remove('hidden');
+      document.getElementById('validation-form').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => notice.classList.add('hidden'), 4000);
+    }
+
+    function renderVerif() {
+      const keys = Object.keys(VERIF_SPECS);
+      document.getElementById('verif-tabs').innerHTML = keys.map(k => `
+        <button type="button" onclick="setVerifCat('${k}')" class="verif-tab ${state.verifCat === k ? 'active' : ''}">${k}</button>
+      `).join('');
+
+      const spec = VERIF_SPECS[state.verifCat];
+      document.getElementById('verif-panel').innerHTML = `
+        <div>
+          <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #e3b778;">Checklist de Aprovação • ${state.verifCat}</span>
+          <h3 style="color: #ffffff; margin-top: 4px;">${spec.subtitle}</h3>
+        </div>
+        <ul class="verif-list">
+          ${spec.docs.map(d => `<li><span style="color: #e3b778; font-weight: 700;">✓</span><span>${d}</span></li>`).join('')}
+        </ul>
+        <div class="verif-rule">🔒 ${spec.rule}</div>
+      `;
+    }
+
+    function setVerifCat(cat) {
+      state.verifCat = cat;
+      renderVerif();
     }
 
     function updateCounter() {
@@ -1522,11 +1719,20 @@
       document.getElementById('side-lead-count').innerHTML = `<strong>${total} inscritos</strong> já validaram o interesse nesta fase.`;
     }
 
+    function updateProgress() {
+      let score = 35;
+      if (state.categories.length > 0) score += 15;
+      if (document.getElementById('field-name').value.trim().length > 1) score += 18;
+      if (document.getElementById('field-whatsapp').value.trim().length > 5) score += 16;
+      if (document.getElementById('field-email').value.includes('@')) score += 16;
+      const pct = Math.min(100, score);
+      document.getElementById('progress-pct').textContent = pct + '%';
+      document.getElementById('progress-bar').style.width = pct + '%';
+    }
+
     function setHowItWorks(tab) {
-      const bCav = document.getElementById('hw-cav');
-      const bPro = document.getElementById('hw-pro');
-      bCav.className = tab === 'cavaleiro' ? 'seg-btn active-forest' : 'seg-btn';
-      bPro.className = tab === 'profissional' ? 'seg-btn active-saddle' : 'seg-btn';
+      document.getElementById('hw-cav').className = tab === 'cavaleiro' ? 'seg-btn active-forest' : 'seg-btn';
+      document.getElementById('hw-pro').className = tab === 'profissional' ? 'seg-btn active-saddle' : 'seg-btn';
 
       const items = tab === 'cavaleiro'
         ? [
@@ -1560,6 +1766,7 @@
         const active = state.difficulties.includes(d);
         return `<button type="button" onclick="toggleDiff('${d}')" class="chip ${active ? 'selected-saddle' : ''}">${d}</button>`;
       }).join('');
+      updateProgress();
     }
 
     function renderFrequencies() {
@@ -1574,6 +1781,9 @@
       document.getElementById('btn-role-profissional').className = role === 'profissional' ? 'role-card active-saddle' : 'role-card';
       document.getElementById('cat-label').textContent = role === 'cavaleiro' ? '2. Que serviços contrata com mais frequência?' : '2. Em que áreas atua?';
       document.getElementById('freq-label').textContent = role === 'cavaleiro' ? '4. Frequência de contratação' : '4. Disponibilidade habitual';
+      document.getElementById('submit-cta-btn').textContent = role === 'cavaleiro'
+        ? 'Garantir Acesso Prioritário como Cavaleiro →'
+        : 'Candidatar Perfil Fundador EquiFlow →';
       renderFrequencies();
       renderChips();
     }
@@ -1624,6 +1834,7 @@
       document.getElementById('lead-form').reset();
       document.getElementById('lead-form').classList.remove('hidden');
       document.getElementById('confirmation-box').classList.add('hidden');
+      updateProgress();
     }
 
     function exportLeads() {
@@ -1637,6 +1848,8 @@
     }
 
     renderPreview();
+    renderRegions();
+    renderVerif();
     updateCounter();
     setHowItWorks('cavaleiro');
     renderFrequencies();
